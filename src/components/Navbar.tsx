@@ -1,21 +1,18 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { logout, reset } from "../features/auth/authSlice";
 import { useState } from "react";
+import { logoutUser, resetStatus } from "../features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { RootState } from "../app/store";
 
 const Navbar = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const [isCollapse, setIsCollapse] = useState(true);
 
-  const onSuccess = (res) => {
-    console.log("Logout made successfully ");
-  };
-
   const onLogout = () => {
-    dispatch(logout());
-    dispatch(reset());
+    dispatch(logoutUser());
+    dispatch(resetStatus());
     navigate("/");
     setIsCollapse(!isCollapse);
   };

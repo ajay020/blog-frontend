@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getBookMarkPosts } from "./../features/auth/authSlice";
 
 const BookMarkPostList = () => {
   const dispatch = useDispatch();
@@ -24,7 +23,7 @@ const BookMarkPostList = () => {
     }
 
     function fetchBookMarkPosts() {
-      dispatch(getBookMarkPosts());
+      dispatch(fetchBookMarkPosts());
       console.log("fetching posts..");
     }
     if (currentUser) {

@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updatePost } from "../features/post/postSlice";
 import { useNavigate, useParams } from "react-router-dom";
-import Spinner from "../components/Spinner";
-// import { useEffect } from "react";
+import { useAppSelector } from "../app/hooks";
+import { updateExistingPost } from "../features/post/postSlice";
 
 const UpdatePost = () => {
   const { postId } = useParams();
 
-  const { posts, isError, isSuccess, isLoading, message } = useSelector(
+  const { posts, status, error } = useAppSelector(
     (state) => state.post
   );
   const post = posts.find((post) => post._id === postId);
@@ -35,14 +34,10 @@ const UpdatePost = () => {
     const postData = {
       ...formData,
     };
-    dispatch(updatePost({ postData, postId }));
+    dispatch(updateExistingPost({ postData, postId }));
     setFormData({ title: "", content: "" });
     navigate("/");
   };
-
-  if (isLoading) {
-    return <Spinner />;
-  }
 
   return (
     <div
