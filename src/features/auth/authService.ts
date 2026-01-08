@@ -11,11 +11,13 @@ export const register = async (
     userData: { name: string; email: string; password: string, confirmPassword: string }
 ): Promise<User> => {
     const { data } = await api.post(`${USERS_URL}/register`, userData);
-    console.log("Registered user data:", data);
-    if (data?.token) {
-        localStorage.setItem("user", JSON.stringify(data));
+    const user = data.data as User;
+    // console.log("Registered user data:", data);
+
+    if (user?.token) {
+        localStorage.setItem("user", JSON.stringify(user));
     }
-    return data;
+    return user;
 };
 
 /**
@@ -26,13 +28,11 @@ export const login = async (
 ): Promise<User> => {
     const { data } = await api.post(`${USERS_URL}/login`, userData);
     const user = data.data as User;
-    console.log("Login user data:", user);
-    console.log("Loging TOKEN:", user.token);
 
+    console.log("Login user data:", user);
 
     if (user?.token) {
         localStorage.setItem("user", JSON.stringify(user));
-        console.log("User saved to localStorage:", user);
     }
 
     return user;

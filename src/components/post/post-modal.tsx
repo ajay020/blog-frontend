@@ -1,4 +1,4 @@
-// import { X } from "lucide-react";
+import { X } from "lucide-react";
 import PostForm from "./post-form";
 import PostComments from "./post-comments";
 import { Post } from "../../types/post";
@@ -22,11 +22,10 @@ const PostModal = ({ isOpen, onClose, post }: PostModalProps) => {
                         {post ? "Edit Post" : "Create Post"}
                     </h2>
                     <button onClick={onClose}>
-                        {/* <X className="w-5 h-5 hover:text-red-400" /> */}
-                        X
+                        <X className="w-5 h-5 hover:text-red-400" />
                     </button>
                 </div>
-
+                
                 {/* Body */}
                 <div className="p-6 space-y-6">
                     <PostForm post={post} onClose={onClose} />

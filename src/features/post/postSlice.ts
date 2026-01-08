@@ -4,6 +4,11 @@ import { PostState } from '../../types/post';
 import { Post } from '../../types/post';
 import { RootState } from '../../app/store';
 
+interface OptimisticUpvotePayload {
+    postId: string;
+    userId: string;
+}
+
 const initialState: PostState = {
     posts: [],
     status: "idle",
@@ -75,7 +80,7 @@ export const deleteExistingPost = createAsyncThunk<
     }
 });
 
-export const upvoteExistingPost = createAsyncThunk<
+export const upvotePost = createAsyncThunk<
     Post,
     string,
     { rejectValue: string }
@@ -99,12 +104,39 @@ export const addComment = createAsyncThunk<
     }
 });
 
+export const fetchPostById = createAsyncThunk<
+    Post, string, { rejectValue: string }   >
+    (
+        "posts/getById",
+        async (postId, thunkAPI) => {
+            try {
+                return await postService.getPostById(postId);
+            } catch (error: any) {
+                return thunkAPI.rejectWithValue(error.message);
+            }
+        }
+    );
+
+
 
 const postSlice = createSlice({
     name: "post",
     initialState,
     reducers: {
         resetPosts: () => initialState,
+        optimisticUpvote(state, action: PayloadAction<OptimisticUpvotePayload>) {
+            const { postId, userId } = action.payload;
+            const post = state.posts.find((p) => p._id === postId);
+            if (!post) return;
+
+            const alreadyUpvoted = post.upvotes.includes(userId);
+
+            if (alreadyUpvoted) {
+                post.upvotes = post.upvotes.filter((id) => id !== userId);
+            } else {
+                post.upvotes.push(userId);
+            }
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -148,15 +180,46 @@ const postSlice = createSlice({
             })
 
             // UPVOTE
-            .addCase(upvoteExistingPost.fulfilled, (state, action) => {
+            .addCase(upvotePost.fulfilled, (state, action) => {
                 state.posts = state.posts.map(post =>
                     post._id === action.payload._id ? action.payload : post
                 );
+            })
+
+            .addCase(upvotePost.rejected, (state, action) => {
+                // rollback
+                const { postId, userId } = action.meta.arg
+                    ? (action.meta.arg as any)
+                    : {};
+
+                const post = state.posts.find((p) => p._id === postId);
+                if (!post || !userId) return;
+
+                // reverse the optimistic change
+                if (post.upvotes.includes(userId)) {
+                    post.upvotes = post.upvotes.filter((id) => id !== userId);
+                } else {
+                    post.upvotes.push(userId);
+                }
+
+                state.error = "Failed to upvote. Please try again.";
+            })
+
+            .addCase(fetchPostById.pending, (state) => {
+                state.status = "loading"
+            })
+            .addCase(fetchPostById.fulfilled, (state, action) => {
+                state.status = "succeeded"
+                state.selectedPost = action.payload;
+            })
+            .addCase(fetchPostById.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.payload || "Failed to fetch post";
             });
     },
 });
 
-export const { resetPosts } = postSlice.actions;
+export const { resetPosts, optimisticUpvote } = postSlice.actions;
 export default postSlice.reducer;
 
 

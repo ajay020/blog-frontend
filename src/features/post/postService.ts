@@ -11,6 +11,7 @@ export const getPosts = async (
 ): Promise<{ posts: Post[]; hasMore: boolean }> => {
     await delay(500); // Simulate network delay
     const { data } = await api.get(`${POSTS_URL}?page=${page}&limit=${limit}`);
+
     return data;
 };
 
@@ -33,6 +34,8 @@ export const deletePost = async (postId: string): Promise<{ id: string }> => {
 };
 
 export const upvotePost = async (postId: string): Promise<Post> => {
+    console.log("Upvoted post:", postId);
+
     const { data } = await api.post<Post>(`${POSTS_URL}/upvote/${postId}`);
     return data;
 };
@@ -42,13 +45,20 @@ export const addComment = async (postId: string, text: string): Promise<Post> =>
     return data;
 }
 
+const getPostById = async (postId: string): Promise<Post> => {
+    const { data } = await api.get(`${POSTS_URL}/${postId}`);
+    return data;
+};
+
+
 const postService = {
     getPosts,
     createPost,
     updatePost,
     deletePost,
     upvotePost,
-    addComment
+    addComment,
+    getPostById
 }
 
 export default postService;
