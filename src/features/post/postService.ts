@@ -34,8 +34,6 @@ export const deletePost = async (postId: string): Promise<{ id: string }> => {
 };
 
 export const upvotePost = async (postId: string): Promise<Post> => {
-    console.log("Upvoted post:", postId);
-
     const { data } = await api.post<Post>(`${POSTS_URL}/upvote/${postId}`);
     return data;
 };
@@ -45,7 +43,6 @@ export const addComment = async (
     text: string
 ): Promise<Comment> => {
     const { data } = await api.post(`${POSTS_URL}/${postId}/comments`, { text });
-    console.log("Comment:", data);
     return data;
 };
 

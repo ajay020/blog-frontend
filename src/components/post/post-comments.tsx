@@ -23,7 +23,7 @@ const PostComments = ({ postId }: Props) => {
     });
 
 
-    console.log("Rendering PostComments for postId:", "with comments:", comments);
+    // console.log("Rendering PostComments for postId:", "with comments:", comments);
 
     const submitComment = () => {
         if (!text.trim() || !user) return;

@@ -7,14 +7,15 @@ import { Link } from "react-router-dom";
 
 interface PostItemProps {
   post: Post;
-  onOpen: (post: Post) => void;
 }
 
-const PostItem = ({ post, onOpen }: PostItemProps) => {
+const PostItem = ({ post }: PostItemProps) => {
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.auth.user?._id);
 
   const isUpvoted = post.upvotes.includes(userId ?? "");
+
+  // console.log("Rendering PostItem", post._id, "isUpvoted:", isUpvoted);
 
   const handleUpvote = () => {
     if (!userId) return;

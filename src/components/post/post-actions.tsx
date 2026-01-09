@@ -1,15 +1,22 @@
 import { Heart, MessageCircle } from "lucide-react";
-import { Post } from "../../types/post";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { optimisticUpvote, upvotePost } from "../../features/post/postSlice";
 
 interface Props {
-    post: Post;
+    postId: string;
 }
 
-const PostActions = ({ post }: Props) => {
+const PostActions = ({ postId }: Props) => {
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.auth.user?._id);
+    const post = useAppSelector((state) => {
+        return (
+            state.posts.posts.find((p) => p._id === postId) ||
+            state.posts.selectedPost
+        );
+    });
+
+    if (!post) return null;
 
     const isUpvoted = post.upvotes.includes(userId ?? "");
 

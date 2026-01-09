@@ -149,10 +149,7 @@ const postSlice = createSlice({
 
             if (!post) return;
 
-            console.log("Adding OPT comment to post:", comment);
-
             post.comments.push(comment);
-            // console.log("Post comments after OPT add:", post);
         }
     },
     extraReducers: (builder) => {

@@ -13,6 +13,7 @@ const Home = () => {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   // console.log("Posts:", posts, status, error);
+  console.log("Home render")
 
   // Initial load
   useEffect(() => {
@@ -55,7 +56,7 @@ const Home = () => {
   return (
     <div className="flex flex-col items-center gap-4 mt-8">
       {posts.map((post) => {
-        return <PostItem key={post._id} post={post} onOpen={setSelectedPost} />;
+        return <PostItem key={post._id} post={post} />;
       })
       }
       <PostModal
