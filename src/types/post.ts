@@ -21,6 +21,7 @@ export interface Comment {
         name: string;
     };
     text: string;
+    optimistic?: boolean;
     createdAt?: string;
 }
 

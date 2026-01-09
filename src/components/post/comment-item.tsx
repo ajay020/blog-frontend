@@ -5,9 +5,12 @@ interface Props {
 }
 
 const CommentItem = ({ comment }: Props) => {
+
+    // console.log("Rendering comment:", comment);
+
     return (
         <div className="bg-slate-800 rounded-lg p-3">
-            <p className="text-xs text-slate-400">{comment.user.name}</p>
+            <p className="text-xs text-slate-400">{comment.user?.name}</p>
             <p className="text-sm">{comment.text}</p>
         </div>
     );

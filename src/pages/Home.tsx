@@ -21,7 +21,6 @@ const Home = () => {
     }
   }, [dispatch, status]);
 
-  // Show error toast
   useEffect(() => {
     if (error) {
       toast.error(error);
@@ -29,7 +28,6 @@ const Home = () => {
   }, [error]);
 
 
-  // Failed state
   if (status === "failed") {
     return (
       <p className="text-center mt-8 text-red-500">

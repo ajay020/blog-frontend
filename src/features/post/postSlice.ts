@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import postService from './postService';
-import { PostState } from '../../types/post';
+import { Comment, PostState } from '../../types/post';
 import { Post } from '../../types/post';
 import { RootState } from '../../app/store';
 
@@ -93,19 +93,20 @@ export const upvotePost = createAsyncThunk<
 });
 
 export const addComment = createAsyncThunk<
-    Post,
+    { postId: string; comment: Comment },
     { postId: string; text: string },
     { rejectValue: string }
 >("posts/addComment", async ({ postId, text }, thunkAPI) => {
     try {
-        return await postService.addComment(postId, text);
+        const comment = await postService.addComment(postId, text);
+        return { postId, comment };
     } catch (error: any) {
         return thunkAPI.rejectWithValue(error.message);
     }
 });
 
 export const fetchPostById = createAsyncThunk<
-    Post, string, { rejectValue: string }   >
+    Post, string, { rejectValue: string }>
     (
         "posts/getById",
         async (postId, thunkAPI) => {
@@ -137,6 +138,22 @@ const postSlice = createSlice({
                 post.upvotes.push(userId);
             }
         },
+
+        optimisticAddComment(
+            state,
+            action: PayloadAction<{ postId: string; comment: Comment }>) {
+
+            const { postId, comment } = action.payload;
+            const post = state.posts.find((p) => p._id === postId)
+                || state.selectedPost;
+
+            if (!post) return;
+
+            console.log("Adding OPT comment to post:", comment);
+
+            post.comments.push(comment);
+            // console.log("Post comments after OPT add:", post);
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -215,11 +232,45 @@ const postSlice = createSlice({
             .addCase(fetchPostById.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.payload || "Failed to fetch post";
+            })
+            .addCase(addComment.fulfilled, (state, action) => {
+                const { postId, comment } = action.payload;
+
+                const post =
+                    state.posts.find((p) => p._id === postId) || state.selectedPost;
+
+                if (!post) return;
+
+                // remove optimistic comment
+                post.comments = post.comments.filter(
+                    (c) => !c.optimistic
+                );
+
+                // add real comment from server
+                post.comments.unshift(comment);
+            })
+
+            .addCase(addComment.rejected, (state, action) => {
+                const { postId } = action.meta.arg;
+                const post =
+                    state.posts.find((p) => p._id === postId) || state.selectedPost;
+
+                if (!post) return;
+
+                // rollback optimistic comment
+                post.comments = post.comments.filter(
+                    (c) => !c.optimistic
+                );
+
+                state.error = "Failed to add comment";
             });
+
+
+        ;
     },
 });
 
-export const { resetPosts, optimisticUpvote } = postSlice.actions;
+export const { resetPosts, optimisticUpvote, optimisticAddComment } = postSlice.actions;
 export default postSlice.reducer;
 
 

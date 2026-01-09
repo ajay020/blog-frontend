@@ -1,5 +1,5 @@
 import api from '../../api/axios';
-import { Post } from '../../types/post';
+import { Comment, Post } from '../../types/post';
 
 const POSTS_URL = "/posts";
 
@@ -40,10 +40,15 @@ export const upvotePost = async (postId: string): Promise<Post> => {
     return data;
 };
 
-export const addComment = async (postId: string, text: string): Promise<Post> => {
-    const { data } = await api.post<Post>(`${POSTS_URL}/${postId}/comments`, { text });
+export const addComment = async (
+    postId: string,
+    text: string
+): Promise<Comment> => {
+    const { data } = await api.post(`${POSTS_URL}/${postId}/comments`, { text });
+    console.log("Comment:", data);
     return data;
-}
+};
+
 
 const getPostById = async (postId: string): Promise<Post> => {
     const { data } = await api.get(`${POSTS_URL}/${postId}`);

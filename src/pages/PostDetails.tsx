@@ -66,7 +66,7 @@ const PostDetails = () => {
       <PostActions post={post} />
 
       {/* Comments */}
-      <PostComments comments={post.comments} postId={post._id} />
+      <PostComments postId={post._id} />
     </div>
   );
 };

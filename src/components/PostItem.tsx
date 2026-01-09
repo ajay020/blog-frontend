@@ -70,29 +70,29 @@ const PostItem = ({ post, onOpen }: PostItemProps) => {
             className="w-full max-h-[400px] object-cover rounded-lg"
           />
         )}
-
-        {/* Footer actions */}
-        <div className="flex items-center gap-6 pt-3 border-t border-slate-800">
-          <button
-            onClick={handleUpvote}
-            className={
-              `flex items-center gap-1 text-sm 
-            ${isUpvoted ? "text-red-500" : "text-slate-400"}`
-            }
-          >
-            <Heart size={18} fill={isUpvoted ? "currentColor" : "none"} />
-            {post.upvotes.length}
-          </button>
-
-          <button
-            onClick={() => onOpen(post)}
-            className="flex items-center gap-1 text-sm text-slate-400 hover:text-white"
-          >
-            <MessageCircle size={18} />
-            {post.comments?.length}
-          </button>
-        </div>
       </Link>
+
+      {/* Footer actions */}
+      <div className="flex items-center gap-6 pt-3 border-t border-slate-800">
+        <button
+          onClick={handleUpvote}
+          className={
+            `flex items-center gap-1 text-sm 
+            ${isUpvoted ? "text-red-500" : "text-slate-400"}`
+          }
+        >
+          <Heart size={18} fill={isUpvoted ? "currentColor" : "none"} />
+          {post.upvotes.length}
+        </button>
+
+        <Link to={`/posts/${post._id}`}
+          className="flex items-center gap-1 text-sm text-slate-400 hover:text-white"
+        >
+          <MessageCircle size={18} />
+          {post.comments?.length}
+        </Link>
+      </div>
+
     </div>
   );
 };
