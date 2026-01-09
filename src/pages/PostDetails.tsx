@@ -11,7 +11,7 @@ const PostDetails = () => {
   const { postId } = useParams<{ postId: string }>();
   const dispatch = useAppDispatch();
 
-  console.log("PostDetails mounted for postId:", postId);
+  // console.log("PostDetails mounted for postId:", postId);
 
   const { selectedPost, status } = useAppSelector(
     (state) => state.posts

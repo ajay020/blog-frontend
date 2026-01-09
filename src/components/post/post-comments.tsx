@@ -1,9 +1,9 @@
-import CommentItem from "./comment-item";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Comment } from "../../types/post";
 import { addComment, optimisticAddComment } from "../../features/post/postSlice";
 import { nanoid } from "@reduxjs/toolkit";
+import CommentItem from "./comment-item";
 
 interface Props {
     postId: string;
@@ -58,7 +58,7 @@ const PostComments = ({ postId }: Props) => {
 
             <div className=" space-y-3 overflow-y-auto">
                 {comments.map((comment) => (
-                    <CommentItem key={comment._id} comment={comment} />
+                    <CommentItem key={comment._id} postId={postId} comment={comment} />
                 ))}
             </div>
 

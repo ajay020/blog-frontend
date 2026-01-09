@@ -46,12 +46,43 @@ export const addComment = async (
     return data;
 };
 
+const deleteCommentApi = async ({
+    postId,
+    commentId,
+}: {
+    postId: string;
+    commentId: string;
+}) => {
+    await api.delete(`/posts/${postId}/comments/${commentId}`);
+    return { postId, commentId };
+};
+
+const updateCommentApi = async ({
+    postId,
+    commentId,
+    text,
+}: {
+    postId: string;
+    commentId: string;
+    text: string;
+}) => {
+    const { data } = await api.put(
+        `${POSTS_URL}/${postId}/comments/${commentId}`,
+        { text }
+    );
+
+    return {
+        postId,
+        commentId,
+        text: data.text,
+    }
+};
+
 
 const getPostById = async (postId: string): Promise<Post> => {
     const { data } = await api.get(`${POSTS_URL}/${postId}`);
     return data;
 };
-
 
 const postService = {
     getPosts,
@@ -60,6 +91,8 @@ const postService = {
     deletePost,
     upvotePost,
     addComment,
+    deleteCommentApi,
+    updateCommentApi,
     getPostById
 }
 

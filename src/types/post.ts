@@ -23,6 +23,7 @@ export interface Comment {
     text: string;
     optimistic?: boolean;
     createdAt?: string;
+    isEditing?: boolean;
 }
 
 

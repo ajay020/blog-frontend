@@ -105,8 +105,47 @@ export const addComment = createAsyncThunk<
     }
 });
 
+export const deleteComment = createAsyncThunk<
+    { postId: string; commentId: string },
+    { postId: string; commentId: string },
+    { rejectValue: string }
+>
+    (
+        "posts/deleteComment",
+        async ({ postId, commentId }, thunkAPI) => {
+            try {
+                await postService.deleteCommentApi({ postId, commentId });
+                return { postId, commentId };
+            } catch (error: any) {
+                throw thunkAPI.rejectWithValue(error.message);
+            }
+        }
+    );
+
+export const updateComment = createAsyncThunk<
+    { postId: string; commentId: string; text: string },
+    { postId: string; commentId: string; text: string },
+    { rejectValue: string }
+>(
+    "posts/updateComment",
+    async ({
+        postId,
+        commentId,
+        text,
+    }, thunkAPI) => {
+        try {
+            return await postService.updateCommentApi({ postId, commentId, text });
+        } catch (error: any) {
+            return thunkAPI.rejectWithValue(error.message);
+        }
+    }
+)
+
 export const fetchPostById = createAsyncThunk<
-    Post, string, { rejectValue: string }>
+    Post,
+    string,
+    { rejectValue: string }
+>
     (
         "posts/getById",
         async (postId, thunkAPI) => {
@@ -117,7 +156,6 @@ export const fetchPostById = createAsyncThunk<
             }
         }
     );
-
 
 
 const postSlice = createSlice({
@@ -138,7 +176,6 @@ const postSlice = createSlice({
                 post.upvotes.push(userId);
             }
         },
-
         optimisticAddComment(
             state,
             action: PayloadAction<{ postId: string; comment: Comment }>) {
@@ -150,7 +187,43 @@ const postSlice = createSlice({
             if (!post) return;
 
             post.comments.push(comment);
-        }
+        },
+        optimisticEditComment: (
+            state,
+            action: PayloadAction<{
+                postId: string;
+                commentId: string;
+                text: string;
+            }>
+        ) => {
+            const { postId, commentId, text } = action.payload;
+
+            const post =
+                state.posts.find((p) => p._id === postId) ||
+                state.selectedPost;
+
+            if (!post) return;
+
+            const comment = post.comments.find((c) => c._id === commentId);
+            if (!comment) return;
+
+            comment.text = text;
+        },
+
+        optimisticDeleteComment: (
+            state,
+            action: PayloadAction<{ postId: string; commentId: string }>
+        ) => {
+            const { postId, commentId } = action.payload;
+
+            const post =
+                state.posts.find((p) => p._id === postId) ||
+                state.selectedPost;
+
+            if (!post) return;
+
+            post.comments = post.comments.filter((c => c._id !== commentId));
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -260,14 +333,25 @@ const postSlice = createSlice({
                 );
 
                 state.error = "Failed to add comment";
+            })
+            .addCase(updateComment.rejected, (state, action) => {
+                state.error = action.payload || "Failed to update comment";
+            })
+            .addCase(deleteComment.rejected, (state, action) => {
+                state.error = action.payload || "Failed to delete comment";
             });
-
 
         ;
     },
 });
 
-export const { resetPosts, optimisticUpvote, optimisticAddComment } = postSlice.actions;
+export const {
+    resetPosts,
+    optimisticUpvote,
+    optimisticAddComment,
+    optimisticEditComment,
+    optimisticDeleteComment
+} = postSlice.actions;
 export default postSlice.reducer;
 
 
