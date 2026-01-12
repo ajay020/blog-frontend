@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import PostItem from "../components/PostItem";
 import { toast } from "react-toastify";
 import { fetchPosts, selectPostsWithBookmarks } from "../features/post/postSlice";
@@ -12,7 +12,7 @@ const Home = () => {
   const posts = useAppSelector(selectPostsWithBookmarks);
   const bookmarks = useAppSelector((s) => s.auth.bookmarks);
 
-  console.log("Home render", status )
+  console.log("Home render", status)
 
   // Initial load
   useEffect(() => {
@@ -53,18 +53,19 @@ const Home = () => {
   }
 
   return (
-    <div className="flex justify-center items-start gap-4 mt-8 mx-8">
-      <div className=" flex-1 flex flex-col gap-4">
-        {posts.map((post) => {
-          return <PostItem key={post._id} post={post} />;
-        })
-        }
+    <div className="flex bg-slate-900 justify-center gap-8 mt-8 mx-8">
+      {/* Main posts area */}
+      <div className="flex-1 flex flex-col items-center gap-4">
+        {posts.map((post) => (
+          <PostItem key={post._id} post={post} />
+        ))}
       </div>
 
-      <div className=" flex flex-col gap-4 ">
-        <h2 className="text-2xl font-bold text-white mb-4">Bookmarked </h2>
+      {/* Bookmarks sidebar */}
+      <div className="w-80 p-4 rounded-md flex flex-col gap-4">
+        <h3 className="text-2xl font-bold text-white mb-4">Bookmarked</h3>
         {bookmarks.length === 0 ? (
-          <p className="text-gray-500">No bookmarked posts.</p>
+          <p className="text-gray-400">No bookmarked posts.</p>
         ) : (
           bookmarks.map((post) => (
             <BookMarkPostItem key={post._id} post={post} />
@@ -72,6 +73,7 @@ const Home = () => {
         )}
       </div>
     </div>
+
   );
 };
 

@@ -6,13 +6,10 @@ import { fetchPostById } from "../features/post/postSlice";
 import PostComments from "../components/post/post-comments";
 import PostActions from "../components/post/post-actions";
 import PostDetailsSkeleton from "../components/post/post-detail-skeleton";
-import { useBookmark } from "../hooks/useBookmark";
 
 const PostDetails = () => {
   const { postId } = useParams<{ postId: string }>();
   const dispatch = useAppDispatch();
-
-  // console.log("PostDetails mounted for postId:", postId);
 
   const { selectedPost, status } = useAppSelector(
     (state) => state.posts

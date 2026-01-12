@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { optimisticUpvote, upvotePost } from "../features/post/postSlice";
 import { Link } from "react-router-dom";
 import { useBookmark } from "../hooks/useBookmark";
+import BookMarkBtn from "./BookMarkBtn";
 
 interface PostItemProps {
   post: Post;
@@ -97,16 +98,8 @@ const PostItem = ({ post }: PostItemProps) => {
         </div>
 
         {/* Bookmark post  */}
-        <button
-          onClick={toggleBookmark}
-          className=""
-        >
-          {
-            isBookmarked ?
-              <BookmarkCheck size={18} className="text-slate-400 hover:text-white" /> :
-              <BookmarkPlus size={18} className="text-slate-400 hover:text-white" />
-          }
-        </button>
+        <BookMarkBtn isBookmarked={isBookmarked} toggleBookmark={toggleBookmark} />
+
       </div>
 
     </div>
