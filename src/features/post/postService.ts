@@ -28,17 +28,17 @@ export const updatePost = async (
     return data;
 };
 
-export const deletePost = async (postId: string): Promise<{ id: string }> => {
+const deletePost = async (postId: string): Promise<{ id: string }> => {
     const { data } = await api.delete(`${POSTS_URL}/${postId}`);
     return data;
 };
 
-export const upvotePost = async (postId: string): Promise<Post> => {
+const upvotePost = async (postId: string): Promise<Post> => {
     const { data } = await api.post<Post>(`${POSTS_URL}/upvote/${postId}`);
     return data;
 };
 
-export const addComment = async (
+const addComment = async (
     postId: string,
     text: string
 ): Promise<Comment> => {
@@ -78,11 +78,16 @@ const updateCommentApi = async ({
     }
 };
 
+export const toggleBookmark = async (postId: string) => {
+    const { data } = await api.post("/users/bookmark-post", { postId });
+    return data;
+};
 
 const getPostById = async (postId: string): Promise<Post> => {
     const { data } = await api.get(`${POSTS_URL}/${postId}`);
     return data;
 };
+
 
 const postService = {
     getPosts,
@@ -93,7 +98,8 @@ const postService = {
     addComment,
     deleteCommentApi,
     updateCommentApi,
-    getPostById
+    getPostById,
+    toggleBookmark
 }
 
 export default postService;

@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react";
 import PostItem from "../components/PostItem";
 import { toast } from "react-toastify";
-import { fetchPosts } from "../features/post/postSlice";
+import { fetchPosts, selectPostsWithBookmarks } from "../features/post/postSlice";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { Post } from "../types/post";
 import { RootState } from "../app/store";
-import PostModal from "../components/post/post-modal";
+import BookMarkPostItem from "../components/post/bookmark-post-item";
 
 const Home = () => {
   const dispatch = useAppDispatch();
-  const { posts, status, error, page, hasMore } = useAppSelector((state: RootState) => state.posts);
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const { status, error } = useAppSelector((state: RootState) => state.posts);
+  const posts = useAppSelector(selectPostsWithBookmarks);
+  const bookmarks = useAppSelector((s) => s.auth.bookmarks);
 
-  // console.log("Posts:", posts, status, error);
-  console.log("Home render")
+  console.log("Home render", status )
 
   // Initial load
   useEffect(() => {
@@ -54,16 +53,24 @@ const Home = () => {
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 mt-8">
-      {posts.map((post) => {
-        return <PostItem key={post._id} post={post} />;
-      })
-      }
-      <PostModal
-        isOpen={!!selectedPost}
-        post={selectedPost ?? undefined}
-        onClose={() => setSelectedPost(null)}
-      />
+    <div className="flex justify-center items-start gap-4 mt-8 mx-8">
+      <div className=" flex-1 flex flex-col gap-4">
+        {posts.map((post) => {
+          return <PostItem key={post._id} post={post} />;
+        })
+        }
+      </div>
+
+      <div className=" flex flex-col gap-4 ">
+        <h2 className="text-2xl font-bold text-white mb-4">Bookmarked </h2>
+        {bookmarks.length === 0 ? (
+          <p className="text-gray-500">No bookmarked posts.</p>
+        ) : (
+          bookmarks.map((post) => (
+            <BookMarkPostItem key={post._id} post={post} />
+          ))
+        )}
+      </div>
     </div>
   );
 };

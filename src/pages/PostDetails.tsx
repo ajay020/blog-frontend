@@ -6,6 +6,7 @@ import { fetchPostById } from "../features/post/postSlice";
 import PostComments from "../components/post/post-comments";
 import PostActions from "../components/post/post-actions";
 import PostDetailsSkeleton from "../components/post/post-detail-skeleton";
+import { useBookmark } from "../hooks/useBookmark";
 
 const PostDetails = () => {
   const { postId } = useParams<{ postId: string }>();

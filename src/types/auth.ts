@@ -1,4 +1,4 @@
-import { Post } from "./post";
+import { BookmarkedPost, Post } from "./post";
 
 export interface User {
     _id: string;
@@ -10,7 +10,7 @@ export interface User {
 
 export interface AuthState {
     user: User | null;
-    bookmarks: Post[];
+    bookmarks: BookmarkedPost[];
     status: "idle" | "loading" | "succeeded" | "failed";
     error: string | null;
 }

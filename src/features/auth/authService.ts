@@ -1,6 +1,6 @@
 import api from "../../api/axios";
 import { User } from "../../types/auth";
-import { Post } from "../../types/post";
+import { BookmarkedPost } from "../../types/post";
 
 const USERS_URL = "/users";
 
@@ -39,35 +39,25 @@ export const login = async (
 };
 
 /**
- * Bookmark post
- */
-export const bookmarkPost = async (postId: string): Promise<Post> => {
-    const { data } = await api.post(`${USERS_URL}/bookmark-post`, { postId });
-    return data;
-
-};
-
-/**
- * Get bookmarked posts
- */
-export const getBookmarkedPosts = async (): Promise<Post[]> => {
-    const { data } = await api.get(`${USERS_URL}/get-bookmark-posts`);
-    return data;
-};
-
-/**
  * Logout
  */
 export const logout = () => {
     localStorage.removeItem("user");
 };
 
+const getBookmarkedPosts = async (): Promise<BookmarkedPost[]> => {
+    const { data } = await api.get(`${USERS_URL}/bookmark-posts`);
+
+    console.log("Fetched bookmarked posts:", data);
+
+    return data;
+}
+
 const authService = {
     register,
     login,
     logout,
-    bookmarkPost,
-    getBookmarkedPosts,
+    getBookmarkedPosts
 };
 
 export default authService;

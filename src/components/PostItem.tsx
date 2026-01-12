@@ -1,9 +1,10 @@
 import { Post } from "../types/post";
-import { Heart, MessageCircle, MoreVertical } from "lucide-react";
+import { BookmarkCheck, BookmarkPlus, Heart, MessageCircle, MoreVertical } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { optimisticUpvote, upvotePost } from "../features/post/postSlice";
 import { Link } from "react-router-dom";
+import { useBookmark } from "../hooks/useBookmark";
 
 interface PostItemProps {
   post: Post;
@@ -12,10 +13,10 @@ interface PostItemProps {
 const PostItem = ({ post }: PostItemProps) => {
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.auth.user?._id);
+  const { toggleBookmark, isBookmarked } = useBookmark(post);
 
   const isUpvoted = post.upvotes.includes(userId ?? "");
-
-  // console.log("Rendering PostItem", post._id, "isUpvoted:", isUpvoted);
+  // console.log("Rendering PostItem", post.bookmarked);
 
   const handleUpvote = () => {
     if (!userId) return;
@@ -74,24 +75,38 @@ const PostItem = ({ post }: PostItemProps) => {
       </Link>
 
       {/* Footer actions */}
-      <div className="flex items-center gap-6 pt-3 border-t border-slate-800">
-        <button
-          onClick={handleUpvote}
-          className={
-            `flex items-center gap-1 text-sm 
+      <div className="flex items-center justify-between gap-6 pt-3 border-t border-slate-800">
+        <div className="flex items-center gap-6">
+          <button
+            onClick={handleUpvote}
+            className={
+              `flex items-center gap-1 text-sm 
             ${isUpvoted ? "text-red-500" : "text-slate-400"}`
-          }
-        >
-          <Heart size={18} fill={isUpvoted ? "currentColor" : "none"} />
-          {post.upvotes.length}
-        </button>
+            }
+          >
+            <Heart size={18} fill={isUpvoted ? "currentColor" : "none"} />
+            {post.upvotes.length}
+          </button>
 
-        <Link to={`/posts/${post._id}`}
-          className="flex items-center gap-1 text-sm text-slate-400 hover:text-white"
+          <Link to={`/posts/${post._id}`}
+            className="flex items-center gap-1 text-sm text-slate-400 hover:text-white"
+          >
+            <MessageCircle size={18} />
+            {post.comments?.length}
+          </Link>
+        </div>
+
+        {/* Bookmark post  */}
+        <button
+          onClick={toggleBookmark}
+          className=""
         >
-          <MessageCircle size={18} />
-          {post.comments?.length}
-        </Link>
+          {
+            isBookmarked ?
+              <BookmarkCheck size={18} className="text-slate-400 hover:text-white" /> :
+              <BookmarkPlus size={18} className="text-slate-400 hover:text-white" />
+          }
+        </button>
       </div>
 
     </div>

@@ -8,8 +8,21 @@ import AddPost from './pages/AddPost';
 import PageNotFound from './pages/PageNotFound';
 import PostDetails from './pages/PostDetails';
 import 'react-toastify/dist/ReactToastify.css';
+import { useAppDispatch, useAppSelector } from './app/hooks';
+import { useEffect } from 'react';
+import { fetchBookmarkedPosts } from './features/auth/authSlice';
 
 function App() {
+
+    const dispatch = useAppDispatch();
+    const user = useAppSelector((s) => s.auth.user);
+
+    useEffect(() => {
+        if (user) {
+            dispatch(fetchBookmarkedPosts());
+        }
+    }, [user, dispatch]);
+
     return (
         <Router>
             <div>
@@ -23,7 +36,6 @@ function App() {
                     {/* <Route path='/bookmarked-posts' element={<BookMarkPostList />} /> */}
                     {/* <Route path='/updatePost/:postId' element={<UpdatePost />} /> */}
                     <Route path="*" element={<PageNotFound />} />
-
                 </Routes>
                 <ToastContainer />
             </div>

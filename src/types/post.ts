@@ -12,6 +12,17 @@ export interface Post {
     upvotes: string[];
     comments: Comment[];
     createdAt: string;
+    bookmarked?: boolean;
+}
+
+export interface BookmarkedPost {
+    _id: string;
+    author: {
+        _id: string;
+        name: string;
+    };
+    title: string;
+    createdAt: string;
 }
 
 export interface Comment {

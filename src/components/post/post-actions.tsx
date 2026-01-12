@@ -1,6 +1,7 @@
-import { Heart, MessageCircle } from "lucide-react";
+import { BookmarkCheck, BookmarkPlus, Heart, MessageCircle } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { optimisticUpvote, upvotePost } from "../../features/post/postSlice";
+import { useBookmark } from "../../hooks/useBookmark";
 
 interface Props {
     postId: string;
@@ -16,8 +17,11 @@ const PostActions = ({ postId }: Props) => {
         );
     });
 
-    if (!post) return null;
+    const { isBookmarked, toggleBookmark } = useBookmark(post!);
 
+
+    if (!post) return null;
+    
     const isUpvoted = post.upvotes.includes(userId ?? "");
 
     const handleUpvote = () => {
@@ -42,6 +46,18 @@ const PostActions = ({ postId }: Props) => {
                 <MessageCircle size={20} />
                 {post.comments.length}
             </div>
+
+            {/* Bookmark post  */}
+            <button
+                onClick={toggleBookmark}
+                className=""
+            >
+                {
+                    isBookmarked ?
+                        <BookmarkCheck size={18} className="text-slate-400 hover:text-white" /> :
+                        <BookmarkPlus size={18} className="text-slate-400 hover:text-white" />
+                }
+            </button>
         </div>
     );
 };

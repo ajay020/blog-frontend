@@ -141,6 +141,17 @@ export const updateComment = createAsyncThunk<
     }
 )
 
+export const toggleBookmark = createAsyncThunk<
+    { postId: string; bookmarked: boolean },
+    string
+>("posts/toggleBookmark", async (postId, thunkAPI) => {
+    try {
+        return await postService.toggleBookmark(postId);
+    } catch (error: any) {
+        return thunkAPI.rejectWithValue(error.message);
+    }
+});
+
 export const fetchPostById = createAsyncThunk<
     Post,
     string,
@@ -223,6 +234,24 @@ const postSlice = createSlice({
             if (!post) return;
 
             post.comments = post.comments.filter((c => c._id !== commentId));
+        },
+
+        optimisticToggleBookmark(
+            state,
+            action: PayloadAction<{ postId: string }>
+        ) {
+            const post = state.posts.find(
+                (p) => p._id === action.payload.postId
+            );
+
+            if (post) {
+                post.bookmarked = !post.bookmarked;
+            }
+
+            if (state.selectedPost?._id === action.payload.postId) {
+                state.selectedPost.bookmarked =
+                    !state.selectedPost.bookmarked;
+            }
         },
     },
     extraReducers: (builder) => {
@@ -339,9 +368,19 @@ const postSlice = createSlice({
             })
             .addCase(deleteComment.rejected, (state, action) => {
                 state.error = action.payload || "Failed to delete comment";
-            });
+            })
+            .addCase(toggleBookmark.rejected, (state, action) => {
+                //rollback on failure
+                const postId = action.meta.arg;
 
-        ;
+                const post = state.posts.find((p) => p._id === postId);
+                if (post) post.bookmarked = !post.bookmarked;
+
+                if (state.selectedPost?._id === postId) {
+                    state.selectedPost.bookmarked =
+                        !state.selectedPost.bookmarked;
+                }
+            });
     },
 });
 
@@ -350,13 +389,27 @@ export const {
     optimisticUpvote,
     optimisticAddComment,
     optimisticEditComment,
-    optimisticDeleteComment
+    optimisticDeleteComment,
+    optimisticToggleBookmark
 } = postSlice.actions;
 export default postSlice.reducer;
 
 
 export const selectAllPosts = (state: RootState) => state.posts.posts;
 export const selectPostsStatus = (state: RootState) => state.posts.status;
+
+export const selectBookmarkedPostIds = (state: RootState) =>
+    state.auth.bookmarks.map(p => p._id);
+
+export const selectPostsWithBookmarks = (state: RootState) => {
+    const bookmarkedIds = selectBookmarkedPostIds(state);
+
+    return state.posts.posts.map(post => ({
+        ...post,
+        bookmarked: bookmarkedIds.includes(post._id),
+    }));
+};
+
 
 
 export const getPostById = (state: RootState, postId: string) => {

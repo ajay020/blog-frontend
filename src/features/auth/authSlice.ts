@@ -1,7 +1,7 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import authService from './authService';
 import { AuthState, User } from '../../types/auth';
-import { Post } from '../../types/post';
+import { BookmarkedPost, Post } from '../../types/post';
 
 //get user from localStorage
 const storedUser = JSON.parse(localStorage.getItem("user") || "null") as User | null;
@@ -46,32 +46,18 @@ export const logoutUser = createAsyncThunk(
     }
 );
 
-export const bookmarkPost = createAsyncThunk<
-    Post,
-    string,
-    { rejectValue: string }
->("auth/bookmarkPost", async (postId, thunkAPI) => {
-    try {
-        return await authService.bookmarkPost(postId);
-    } catch (error: any) {
-        return thunkAPI.rejectWithValue(error.message);
-    }
-});
-
-
 export const fetchBookmarkedPosts = createAsyncThunk<
-    Post[],
+    BookmarkedPost[],
     void,
     { rejectValue: string }
->("auth/fetchBookmarks", async (_, thunkAPI) => {
+>("auth/fetchBookmarkedPosts", async (_, thunkAPI) => {
     try {
-        return await authService.getBookmarkedPosts();
+        const posts = await authService.getBookmarkedPosts();
+        return posts;
     } catch (error: any) {
         return thunkAPI.rejectWithValue(error.message);
     }
 });
-
-
 
 const authSlice = createSlice({
     name: "auth",
@@ -81,6 +67,32 @@ const authSlice = createSlice({
             state.status = "idle";
             state.error = null;
         },
+
+        optimisticToggleBookmarkAuth(
+            state,
+            action: PayloadAction<{ post: Post }>
+        ) {
+            const exists = state.bookmarks.find(
+                (p) => p._id === action.payload.post._id
+            );
+
+            if (exists) {
+                // remove
+                state.bookmarks = state.bookmarks.filter(
+                    (p) => p._id !== action.payload.post._id
+                );
+            } else {
+                // add
+                const bookmarkPost = {
+                    _id: action.payload.post._id,
+                    title: action.payload.post.title,
+                    author: action.payload.post.author,
+                    createdAt: action.payload.post.createdAt,
+                }
+                state.bookmarks.unshift(bookmarkPost);
+            }
+        }
+
     },
     extraReducers: (builder) => {
         builder
@@ -116,22 +128,7 @@ const authSlice = createSlice({
                 state.user = null;
                 state.bookmarks = [];
             })
-
-            // BOOKMARK POST (toggle logic)
-            .addCase(bookmarkPost.fulfilled, (state, action) => {
-                state.status = "succeeded";
-
-                const post = action.payload;
-                const exists = state.bookmarks.some(
-                    (p) => p._id === post._id
-                );
-
-                state.bookmarks = exists
-                    ? state.bookmarks.filter((p) => p._id !== post._id)
-                    : [...state.bookmarks, post];
-            })
-
-            // FETCH BOOKMARKS
+            // FETCH BOOKMARKED POSTS
             .addCase(fetchBookmarkedPosts.pending, (state) => {
                 state.status = "loading";
             })
@@ -141,11 +138,12 @@ const authSlice = createSlice({
             })
             .addCase(fetchBookmarkedPosts.rejected, (state, action) => {
                 state.status = "failed";
-                state.error = action.payload ?? "Failed to load bookmarks";
+                state.error = action.payload ?? "Failed to fetch bookmarked posts";
             });
     },
 });
 
 
-export const { resetStatus } = authSlice.actions;
+export const { resetStatus, optimisticToggleBookmarkAuth} = authSlice.actions;
+
 export default authSlice.reducer;
