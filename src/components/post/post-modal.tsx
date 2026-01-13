@@ -31,7 +31,7 @@ const PostModal = ({ isOpen, onClose, post }: PostModalProps) => {
                     <PostForm post={post} onClose={onClose} />
 
                     {post && (
-                        <PostComments comments={post.comments} postId={post._id} />
+                        <PostComments postId={post._id} />
                     )}
                 </div>
             </div>

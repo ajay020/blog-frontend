@@ -4,7 +4,6 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
-import AddPost from './pages/AddPost';
 import PageNotFound from './pages/PageNotFound';
 import PostDetails from './pages/PostDetails';
 import 'react-toastify/dist/ReactToastify.css';
@@ -31,7 +30,7 @@ function App() {
                     <Route path='/' element={<Home />} />
                     <Route path='/login' element={<Login />} />
                     <Route path='/register' element={<Register />} />
-                    <Route path='/addPost' element={<AddPost />} />
+                    {/* <Route path='/addPost' element={<AddPost />} /> */}
                     <Route path='/posts/:postId' element={<PostDetails />} />
                     {/* <Route path='/bookmarked-posts' element={<BookMarkPostList />} /> */}
                     {/* <Route path='/updatePost/:postId' element={<UpdatePost />} /> */}

@@ -1,38 +1,24 @@
 import { Post } from "../types/post";
-import { BookmarkCheck, BookmarkPlus, Heart, MessageCircle, MoreVertical } from "lucide-react";
+import { MessageCircle, MoreVertical } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { optimisticUpvote, upvotePost } from "../features/post/postSlice";
+import { useAppSelector } from "../app/hooks";
 import { Link } from "react-router-dom";
 import { useBookmark } from "../hooks/useBookmark";
 import BookMarkBtn from "./BookMarkBtn";
+import useLike from "../hooks/useLike";
+import LikeButton from "./LikeBtn";
 
 interface PostItemProps {
   post: Post;
 }
 
 const PostItem = ({ post }: PostItemProps) => {
-  const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.auth.user?._id);
   const { toggleBookmark, isBookmarked } = useBookmark(post);
 
-  const isUpvoted = post.upvotes.includes(userId ?? "");
   // console.log("Rendering PostItem", post.bookmarked);
 
-  const handleUpvote = () => {
-    if (!userId) return;
-
-    // 1️⃣ Optimistic UI update
-    dispatch(
-      optimisticUpvote({
-        postId: post._id,
-        userId,
-      })
-    );
-
-    // 2️⃣ API call
-    dispatch(upvotePost(post._id));
-  };
+  const { toggleUpvote, isUpvoted } = useLike(post)
 
   return (
     <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4 shadow">
@@ -78,16 +64,7 @@ const PostItem = ({ post }: PostItemProps) => {
       {/* Footer actions */}
       <div className="flex items-center justify-between gap-6 pt-3 border-t border-slate-800">
         <div className="flex items-center gap-6">
-          <button
-            onClick={handleUpvote}
-            className={
-              `flex items-center gap-1 text-sm 
-            ${isUpvoted ? "text-red-500" : "text-slate-400"}`
-            }
-          >
-            <Heart size={18} fill={isUpvoted ? "currentColor" : "none"} />
-            {post.upvotes.length}
-          </button>
+          <LikeButton post={post} isUpvoted={isUpvoted} toggleUpvote={toggleUpvote} />
 
           <Link to={`/posts/${post._id}`}
             className="flex items-center gap-1 text-sm text-slate-400 hover:text-white"
