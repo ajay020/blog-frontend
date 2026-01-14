@@ -1,7 +1,10 @@
-import { useState } from "react";
-import { Post } from "../../types/post";
-import { useAppDispatch } from "../../app/hooks";
-import { createNewPost, updateExistingPost } from "../../features/post/postSlice";
+import { useEffect, useState } from "react";
+import { Post } from "@/types/post";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { createNewPost, resetCreateStatus, updateExistingPost } from "@/features/post/postSlice";
+import { compressImage } from "@/utils/imageCompression";
+import { toast } from "react-toastify";
+
 
 interface PostFormProps {
     post?: Post;
@@ -10,6 +13,7 @@ interface PostFormProps {
 
 const PostForm = ({ post, onClose }: PostFormProps) => {
     const dispatch = useAppDispatch();
+    const status = useAppSelector(state => state.posts.createStatus)
 
     const [title, setTitle] = useState(post?.title ?? "");
     const [content, setContent] = useState(post?.content ?? "");
@@ -17,6 +21,14 @@ const PostForm = ({ post, onClose }: PostFormProps) => {
     const [imagePreview, setImagePreview] = useState<string | null>(
         post?.image?.url ?? null
     );
+
+
+    useEffect(() => {
+        if (status == "succeeded") {
+            onClose()
+            dispatch(resetCreateStatus())
+        }
+    }, [status])
 
     const handleSubmit = () => {
         if (!title.trim()) return;
@@ -35,11 +47,39 @@ const PostForm = ({ post, onClose }: PostFormProps) => {
             dispatch(createNewPost(formData));
         }
 
-        onClose();
+
+        // onClose();
+    };
+
+    const handleImageChange = async (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Optional: validate type
+        if (!file.type.startsWith("image/")) {
+            toast.error("Please select an image file");
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error("Image too large (max 5MB)");
+            return;
+        }
+
+        // Compress
+        const compressed = await compressImage(file);
+
+        setImageFile(compressed);
+        setImagePreview(URL.createObjectURL(compressed));
     };
 
     return (
         <div className="space-y-4">
+            {
+                status == "loading" && <p>Creating post...</p>
+            }
             {/* Title */}
             <input
                 type="text"
@@ -63,16 +103,9 @@ const PostForm = ({ post, onClose }: PostFormProps) => {
                 <input
                     type="file"
                     accept="image/*"
-                    onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-
-                        setImageFile(file);
-                        setImagePreview(URL.createObjectURL(file));
-                    }}
+                    onChange={(e) => handleImageChange(e)}
                     className="text-sm"
                 />
-
 
                 {imagePreview && (
                     <img

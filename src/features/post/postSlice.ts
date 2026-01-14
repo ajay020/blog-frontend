@@ -15,6 +15,7 @@ const initialState: PostState = {
     selectedPost: null,
     deleteStatus: "idle",
     updateStatus: "idle",
+    createStatus: "idle",
     error: null,
     page: 1,
     hasMore: true,
@@ -180,6 +181,9 @@ const postSlice = createSlice({
             state.selectedPost = null;
             state.deleteStatus = "idle"
         },
+        resetCreateStatus: (state) =>{
+            state.createStatus = "idle"
+        },
 
         optimisticUpvote(state, action: PayloadAction<OptimisticUpvotePayload>) {
             const { postId, userId } = action.payload;
@@ -295,8 +299,12 @@ const postSlice = createSlice({
             })
 
             // CREATE
+            .addCase(createNewPost.pending, (state) => {
+                state.createStatus = "loading"
+            })
             .addCase(createNewPost.fulfilled, (state, action: PayloadAction<Post>) => {
                 state.posts.unshift(action.payload);
+                state.createStatus = "succeeded"
             })
 
             // UPDATE
@@ -414,6 +422,7 @@ const postSlice = createSlice({
 export const {
     resetPosts,
     clearSelectedPost,
+    resetCreateStatus,
     optimisticUpvote,
     optimisticAddComment,
     optimisticEditComment,
