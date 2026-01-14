@@ -17,7 +17,7 @@ const PostItem = ({ post }: PostItemProps) => {
   const { toggleUpvote, isUpvoted } = useLike(post)
 
   return (
-    <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4 shadow">
+    <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-xl p-2 md:p-5 space-y-4 shadow">
       <Link to={`/posts/${post._id}`}>
         <div className="flex justify-between gap-4">
           <div className=" flex-col flex-1">
@@ -51,7 +51,7 @@ const PostItem = ({ post }: PostItemProps) => {
             <img
               src={post.image.url}
               alt="post"
-              className="w-[200] max-h-[120px] object-cover rounded-lg"
+              className="w-[100px] max-h-[100px] md:w-[200px] md:max-h[120px]  object-cover rounded-lg"
             />
           )}
         </div>
