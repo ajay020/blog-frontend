@@ -45,7 +45,7 @@ export const fetchMorePosts = createAsyncThunk<
 
 export const createNewPost = createAsyncThunk<
     Post,
-    Partial<Post>,
+    FormData,
     { rejectValue: string }
 >("posts/create", async (postData, thunkAPI) => {
     try {
@@ -57,7 +57,7 @@ export const createNewPost = createAsyncThunk<
 
 export const updateExistingPost = createAsyncThunk<
     Post,
-    { postId: string; postData: Partial<Post> },
+    { postId: string; postData: FormData },
     { rejectValue: string }
 >("posts/update", async ({ postId, postData }, thunkAPI) => {
     try {

@@ -13,21 +13,26 @@ const PostForm = ({ post, onClose }: PostFormProps) => {
 
     const [title, setTitle] = useState(post?.title ?? "");
     const [content, setContent] = useState(post?.content ?? "");
-    const [image, setImage] = useState<string | null>(post?.image?.url ?? null);
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(
+        post?.image?.url ?? null
+    );
 
     const handleSubmit = () => {
         if (!title.trim()) return;
 
-        const payload = {
-            title,
-            content,
-            image: image ? { url: image } : undefined,
-        };
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("content", content);
+
+        if (imageFile) {
+            formData.append("image", imageFile);
+        }
 
         if (post) {
-            dispatch(updateExistingPost({ postData: payload, postId: post._id }));
+            dispatch(updateExistingPost({ postId: post._id, postData: formData }));
         } else {
-            dispatch(createNewPost(payload));
+            dispatch(createNewPost(formData));
         }
 
         onClose();
@@ -58,15 +63,20 @@ const PostForm = ({ post, onClose }: PostFormProps) => {
                 <input
                     type="file"
                     accept="image/*"
-                    onChange={(e) =>
-                        e.target.files && setImage(URL.createObjectURL(e.target.files[0]))
-                    }
+                    onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+
+                        setImageFile(file);
+                        setImagePreview(URL.createObjectURL(file));
+                    }}
                     className="text-sm"
                 />
 
-                {image && (
+
+                {imagePreview && (
                     <img
-                        src={image}
+                        src={imagePreview}
                         alt="preview"
                         className="mt-3 rounded-lg max-h-60 object-cover"
                     />

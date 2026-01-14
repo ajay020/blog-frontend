@@ -15,16 +15,22 @@ export const getPosts = async (
     return data;
 };
 
-export const createPost = async (postData: Partial<Post>): Promise<Post> => {
-    const { data } = await api.post<Post>(POSTS_URL, postData);
+export const createPost = async (postData: FormData): Promise<Post> => {
+    console.log("Creating post with data:", postData);
+    const { data } = await api.post(POSTS_URL, postData);
+
     return data;
 };
 
 export const updatePost = async (
     postId: string,
-    postData: Partial<Post>
+    postData: FormData
 ): Promise<Post> => {
-    const { data } = await api.patch<Post>(`${POSTS_URL}/${postId}`, postData);
+    const { data } = await api.patch<Post>(`${POSTS_URL}/${postId}`, postData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
     return data;
 };
 

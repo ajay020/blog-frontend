@@ -25,14 +25,10 @@ const PostModal = ({ isOpen, onClose, post }: PostModalProps) => {
                         <X className="w-5 h-5 hover:text-red-400" />
                     </button>
                 </div>
-                
+
                 {/* Body */}
                 <div className="p-6 space-y-6">
                     <PostForm post={post} onClose={onClose} />
-
-                    {post && (
-                        <PostComments postId={post._id} />
-                    )}
                 </div>
             </div>
         </div>
