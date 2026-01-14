@@ -100,7 +100,6 @@ const PostActions = ({ postId }: Props) => {
 
             </div>
 
-
             {/* Dropdown menu */}
             {isMenuOpen && (
                 <div
