@@ -12,6 +12,9 @@ interface OptimisticUpvotePayload {
 const initialState: PostState = {
     posts: [],
     status: "idle",
+    selectedPost: null,
+    deleteStatus: "idle",
+    updateStatus: "idle",
     error: null,
     page: 1,
     hasMore: true,
@@ -168,12 +171,16 @@ export const fetchPostById = createAsyncThunk<
         }
     );
 
-
 const postSlice = createSlice({
     name: "post",
     initialState,
     reducers: {
         resetPosts: () => initialState,
+        clearSelectedPost(state) {
+            state.selectedPost = null;
+            state.deleteStatus = "idle"
+        },
+
         optimisticUpvote(state, action: PayloadAction<OptimisticUpvotePayload>) {
             const { postId, userId } = action.payload;
             const post = state.posts.find((p) => p._id === postId);
@@ -253,6 +260,15 @@ const postSlice = createSlice({
                     !state.selectedPost.bookmarked;
             }
         },
+
+        optimisticDeletePost(
+            state,
+            action: PayloadAction<{ postId: string }>
+        ) {
+            const post = state.posts.find(p => p._id === action.payload.postId)
+            if (!post) return
+            state.posts = state.posts.filter(p => p._id != action.payload.postId)
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -284,15 +300,26 @@ const postSlice = createSlice({
             })
 
             // UPDATE
+            .addCase(updateExistingPost.pending, (state, action) => {
+                state.updateStatus = "loading"
+            })
             .addCase(updateExistingPost.fulfilled, (state, action) => {
                 state.posts = state.posts.map(post =>
                     post._id === action.payload._id ? action.payload : post
                 );
+                state.updateStatus = "succeeded"
             })
 
             // DELETE
+            .addCase(deleteExistingPost.pending, (state, action) => {
+                state.deleteStatus = "loading";
+            })
             .addCase(deleteExistingPost.fulfilled, (state, action) => {
                 state.posts = state.posts.filter(post => post._id !== action.payload);
+                state.deleteStatus = "succeeded"
+            })
+            .addCase(deleteExistingPost.rejected, (state, action) => {
+                state.deleteStatus = "failed"
             })
 
             // UPVOTE
@@ -386,11 +413,14 @@ const postSlice = createSlice({
 
 export const {
     resetPosts,
+    clearSelectedPost,
     optimisticUpvote,
     optimisticAddComment,
     optimisticEditComment,
     optimisticDeleteComment,
-    optimisticToggleBookmark
+    optimisticToggleBookmark,
+    optimisticDeletePost
+
 } = postSlice.actions;
 export default postSlice.reducer;
 

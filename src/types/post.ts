@@ -40,8 +40,10 @@ export interface Comment {
 
 export interface PostState {
     posts: Post[];
-    selectedPost?: Post;
+    selectedPost?: Post | null;
     status: "idle" | "loading" | "succeeded" | "failed";
+    deleteStatus: "idle" | "loading" | "succeeded" | "failed";
+    updateStatus: "idle" | "loading" | "succeeded" | "failed";
     error: string | null;
     page: number;
     hasMore: boolean;
