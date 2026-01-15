@@ -17,14 +17,16 @@ const PostItem = ({ post }: PostItemProps) => {
   const { toggleUpvote, isUpvoted } = useLike(post)
 
   return (
-    <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-xl p-2 md:p-5 space-y-4 shadow">
+    <div className="w-full max-w-2xl bg-white
+     dark:bg-slate-900 border border-slate-300
+      dark:border-slate-800 rounded-xl p-2 md:p-5 space-y-4 shadow">
       <Link to={`/posts/${post._id}`}>
         <div className="flex justify-between gap-4">
           <div className=" flex-col flex-1">
             {/* Header */}
             <div className="flex justify-between items-start">
               <div>
-                <p className="text-sm font-medium text-white">
+                <p className="text-sm font-medium text-gray-900 dark:text-white">
                   {post.author.name}
                 </p>
                 <p className="text-xs text-slate-400">
@@ -34,13 +36,13 @@ const PostItem = ({ post }: PostItemProps) => {
             </div>
 
             {/* Title */}
-            <h3 className="text-lg font-semibold text-white">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
               {post.title}
             </h3>
 
             {/* Content */}
             {post.content && (
-              <p className="text-slate-300 leading-relaxed line-clamp-3">
+              <p className="text-gray-600 dark:text-slate-300 leading-relaxed line-clamp-3">
                 {post.content}
               </p>
             )}
@@ -58,7 +60,7 @@ const PostItem = ({ post }: PostItemProps) => {
       </Link>
 
       {/* Footer actions */}
-      <div className="flex items-center justify-between gap-6 pt-3 border-t border-slate-800">
+      <div className="flex items-center justify-between gap-6 pt-3 border-t border-slate-300 dark:border-slate-800">
         <div className="flex items-center gap-6">
           <LikeButton post={post} isUpvoted={isUpvoted} toggleUpvote={toggleUpvote} />
 

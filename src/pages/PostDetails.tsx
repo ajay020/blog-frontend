@@ -28,7 +28,7 @@ const PostDetails = () => {
   const post = selectedPost;
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6 text-white">
+    <div className="max-w-3xl mx-auto px-4 py-6 dark:text-white text-gray-900">
 
       {/* Back */}
       <Link to="/" className="flex items-center gap-2 text-slate-400 hover:text-white mb-4">
@@ -58,7 +58,7 @@ const PostDetails = () => {
       )}
 
       {/* Content */}
-      <p className="text-slate-300 leading-relaxed mb-6">
+      <p className="dark:text-slate-300 text-slate-700 leading-relaxed mb-6">
         {post.content}
       </p>
 

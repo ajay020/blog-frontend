@@ -58,7 +58,7 @@ const CommentItem = ({ comment, postId }: Props) => {
     };
 
     return (
-        <div className="bg-slate-800 p-3 rounded-lg">
+        <div className="dark:bg-slate-800 bg-slate-100 p-3 rounded-lg">
             <div className="flex justify-between items-start">
                 <p className="text-xs text-slate-400">
                     {comment.user.name}

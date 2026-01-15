@@ -104,12 +104,12 @@ const PostActions = ({ postId }: Props) => {
             {isMenuOpen && (
                 <div
                     ref={menuRef}
-                    className="absolute right-0 top-full mt-2 w-40 bg-slate-700 rounded-md shadow-lg z-50"
+                    className="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-slate-700 rounded-md shadow-lg z-50"
                 >
                     <button
                         className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-500"
                         onClick={() => {
-                            console.log("Edit post:", postId);
+                            // console.log("Edit post:", postId);
                             setIsMenuOpen(false);
                         }}
                     >

@@ -6,16 +6,27 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import PageNotFound from './pages/PageNotFound';
 import PostDetails from './pages/PostDetails';
-import 'react-toastify/dist/ReactToastify.css';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { useEffect } from 'react';
 import { fetchBookmarkedPosts } from './features/auth/authSlice';
+import { selectTheme } from './features/theme/themeSlice';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-
     const dispatch = useAppDispatch();
     const user = useAppSelector((s) => s.auth.user);
+    const theme = useAppSelector(selectTheme);
 
+    // Apply theme class to document on mount and when theme changes
+    useEffect(() => {
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }, [theme]);
+
+    // fetch bookmarked posts
     useEffect(() => {
         if (user) {
             dispatch(fetchBookmarkedPosts());
@@ -24,20 +35,15 @@ function App() {
 
     return (
         <Router>
-            <div>
-                <Navbar />
-                <Routes>
-                    <Route path='/' element={<Home />} />
-                    <Route path='/login' element={<Login />} />
-                    <Route path='/register' element={<Register />} />
-                    {/* <Route path='/addPost' element={<AddPost />} /> */}
-                    <Route path='/posts/:postId' element={<PostDetails />} />
-                    {/* <Route path='/bookmarked-posts' element={<BookMarkPostList />} /> */}
-                    {/* <Route path='/updatePost/:postId' element={<UpdatePost />} /> */}
-                    <Route path="*" element={<PageNotFound />} />
-                </Routes>
-                <ToastContainer />
-            </div>
+            <Navbar />
+            <Routes>
+                <Route path='/' element={<Home />} />
+                <Route path='/login' element={<Login />} />
+                <Route path='/register' element={<Register />} />
+                <Route path='/posts/:postId' element={<PostDetails />} />
+                <Route path="*" element={<PageNotFound />} />
+            </Routes>
+            <ToastContainer />
         </Router>
     );
 }

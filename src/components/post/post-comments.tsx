@@ -53,7 +53,7 @@ const PostComments = ({ postId }: Props) => {
     };
 
     return (
-        <div className="border-t border-slate-700 pt-4 space-y-4">
+        <div className=" pt-4 space-y-4">
             <h3 className="text-sm font-semibold">Comments</h3>
 
             <div className=" space-y-3 overflow-y-auto">
@@ -67,11 +67,11 @@ const PostComments = ({ postId }: Props) => {
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     placeholder="Add a comment..."
-                    className="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2"
+                    className="flex-1 bg-slate-100 dark:bg-slate-800 border border-slate-700 rounded-lg px-3 py-2"
                 />
                 <button
                     onClick={submitComment}
-                    className="px-3 py-2 bg-indigo-600 rounded-lg"
+                    className="px-3 py-2 bg-indigo-600 rounded-lg text-white"
                 >
                     Send
                 </button>

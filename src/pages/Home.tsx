@@ -53,7 +53,7 @@ const Home = () => {
   }
 
   return (
-    <div className="flex bg-slate-900 justify-center gap-8 mt-8 mx-2 md:mx-8">
+    <div className="flex bg-white dark:bg-slate-900 justify-center gap-8 mt-8 mx-2 md:mx-8">
       {/* Main posts area */}
       <div className="flex-1 flex flex-col items-center gap-4">
         {posts.map((post) => (

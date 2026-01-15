@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { RootState } from "../app/store";
 import PostModal from "./post/post-modal";
 import { LogOut, LucidePencil, Settings, UserCircle, UserCircle2 } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
 
 const Navbar = () => {
   const dispatch = useAppDispatch();
@@ -39,7 +40,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="relative bg-slate-900 border-b border-gray-700 text-white">
+      <nav className="relative bg-white dark:bg-slate-900 border-b border-gray-700 text-gray-900 dark:text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
 
@@ -52,6 +53,9 @@ const Navbar = () => {
 
             {/* Auth Actions */}
             <div className="flex space-x-4">
+
+              <ThemeToggle />
+
               {user ? (
                 <>
                   <button
@@ -81,12 +85,12 @@ const Navbar = () => {
           isMenuOpen && (
             <div
               ref={menuRef}
-              className="absolute py-2 right-2 top-full  bg-slate-800 w-48 ring-1 ring-black/20 z-50">
+              className="absolute py-2 right-2 top-full bg-white  dark:bg-slate-800 w-48 ring-1 ring-black/20 z-50">
               {/* Profile header */}
               <div className="flex gap-3 py-3 px-4 items-center border-b border-slate-600">
-                <UserCircle2 className="text-white" size={28} />
+                <UserCircle2 className="text-gray-900 dark:text-white" size={28} />
                 <div>
-                  <p className="text-sm font-medium text-white">{user?.name}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name}</p>
                   <p className="text-xs text-slate-400 truncate">{user?.email}</p>
                 </div>
               </div>
@@ -95,7 +99,7 @@ const Navbar = () => {
               <ul className="flex flex-col py-2">
                 <li>
                   <button className="flex items-center gap-2 w-full 
-                  px-4 py-2 text-sm text-slate-200 hover:bg-slate-700 hover:text-white rounded-md">
+                  px-4 py-2 text-sm dark:text-white text-slate-900 dark:hover:text-slate-200 hover:text-slate-950 rounded-md">
                     <Settings size={16} />
                     Settings
                   </button>
@@ -104,7 +108,7 @@ const Navbar = () => {
                   <button
                     onClick={onLogout}
                     className="flex items-center gap-2 w-full px-4 py-2
-                     text-sm text-red-400 hover:bg-slate-700 hover:text-red-500 rounded-md"
+                     text-sm text-red-400 hover:text-red-500 rounded-md"
                   >
                     <LogOut size={16} />
                     Logout
