@@ -5,7 +5,7 @@ import { BookmarkedPost, Post } from '../../types/post';
 
 //get user from localStorage
 const storedUser = JSON.parse(localStorage.getItem("user") || "null") as User | null;
-console.log("Stored user from localStorage:", storedUser);
+// console.log("Stored user from localStorage:", storedUser);
 
 const initialState: AuthState = {
     user: storedUser,
@@ -91,6 +91,12 @@ const authSlice = createSlice({
                 }
                 state.bookmarks.unshift(bookmarkPost);
             }
+        },
+        optimisticDeleteBookmark(
+            state,
+            action: PayloadAction<{ postId: string }>
+        ) {
+            state.bookmarks = state.bookmarks.filter(post => post._id !== action.payload.postId)
         }
 
     },
@@ -139,11 +145,12 @@ const authSlice = createSlice({
             .addCase(fetchBookmarkedPosts.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.payload ?? "Failed to fetch bookmarked posts";
-            });
+            })
+            ;
     },
 });
 
 
-export const { resetStatus, optimisticToggleBookmarkAuth} = authSlice.actions;
+export const { resetStatus, optimisticToggleBookmarkAuth, optimisticDeleteBookmark } = authSlice.actions;
 
 export default authSlice.reducer;

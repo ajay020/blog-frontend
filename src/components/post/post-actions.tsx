@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { clearSelectedPost, deleteExistingPost, optimisticDeletePost } from "../../features/post/postSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { optimisticDeleteBookmark } from "@/features/auth/authSlice";
 
 interface Props {
     postId: string;
@@ -22,10 +23,8 @@ const PostActions = ({ postId }: Props) => {
     const user = useAppSelector((state) => state.auth.user)
 
     const post = useAppSelector((state) => {
-        return (
-            state.posts.posts.find((p) => p._id === postId) ||
-            state.posts.selectedPost
-        );
+        return state.posts.selectedPost
+
     });
 
     const { toggleUpvote, isUpvoted } = useLike(post!)
@@ -34,9 +33,12 @@ const PostActions = ({ postId }: Props) => {
 
     const isValidUser = user?._id === post?.author._id
 
+    console.log("IsValid post", post)
+
+    console.log("IsValid user", user?._id, post?.author._id)
+
     //  Close menu when clicking outside
     useEffect(() => {
-
         const handleClickOutside = (event: MouseEvent) => {
             if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
                 setIsMenuOpen(false);
@@ -49,10 +51,10 @@ const PostActions = ({ postId }: Props) => {
         };
     }, []);
 
-
     const handlePostDelete = () => {
         dispatch(optimisticDeletePost({ postId }))
         dispatch(deleteExistingPost(postId))
+        dispatch(optimisticDeleteBookmark({ postId }))
     }
 
     useEffect(() => {

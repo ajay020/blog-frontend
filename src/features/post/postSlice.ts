@@ -181,7 +181,7 @@ const postSlice = createSlice({
             state.selectedPost = null;
             state.deleteStatus = "idle"
         },
-        resetCreateStatus: (state) =>{
+        resetCreateStatus: (state) => {
             state.createStatus = "idle"
         },
 
@@ -362,6 +362,7 @@ const postSlice = createSlice({
             .addCase(fetchPostById.fulfilled, (state, action) => {
                 state.status = "succeeded"
                 state.selectedPost = action.payload;
+                console.log("Seected post", action.payload)
             })
             .addCase(fetchPostById.rejected, (state, action) => {
                 state.status = "failed";

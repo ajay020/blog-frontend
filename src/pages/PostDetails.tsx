@@ -27,6 +27,8 @@ const PostDetails = () => {
 
   const post = selectedPost;
 
+  console.log("Selected post", post)
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-6 dark:text-white text-gray-900">
 
