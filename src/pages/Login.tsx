@@ -1,124 +1,114 @@
-import { Link, useNavigate } from "react-router-dom";
-import { ChangeEvent, FormEvent, useState } from "react";
-import { useEffect } from "react";
-import { toast } from "react-toastify";
-import { loginUser, resetStatus } from "../features/auth/authSlice";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import FormInput from "@/components/UI/FormInput";
-
-interface LoginFormData {
-  email: string;
-  password: string;
-}
+// src/pages/Login.tsx
+import { useState, FormEvent, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { login, clearError, selectAuth } from '../features/auth/authSice2';
+import Input from '@/components/UI/Input';
+import Button from '../components/UI/Button';
 
 const Login = () => {
-  const [formData, setFormData] = useState<LoginFormData>({
-    email: "",
-    password: "",
-  });
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+    });
 
-  const { user, status, error } = useAppSelector(
-    (state) => state.auth
-  );
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const { isLoading, error, isAuthenticated } = useAppSelector(selectAuth);
 
-  const { email, password } = formData;
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+    // Redirect if already authenticated
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/dashboard');
+        }
+    }, [isAuthenticated, navigate]);
 
-  useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, [user, dispatch]);
+    // Clear error when component unmounts
+    useEffect(() => {
+        return () => {
+            dispatch(clearError());
+        };
+    }, [dispatch]);
 
-  // Handle errors
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-      dispatch(resetStatus());
-    }
-  }, [error, dispatch]);
-
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!email || !password) {
-      return;
-    }
-
-    const userData = {
-      email,
-      password,
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
     };
 
-    if (email && password) {
-      dispatch(loginUser(userData));
-    }
-  };
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-slate-900 px-4">
-      <div className="w-full max-w-md rounded-2xl bg-white dark:bg-slate-950 p-8 shadow-lg">
-        <h1 className="mb-6 text-center text-2xl font-bold text-gray-800 dark:text-white">
-          Sign In
-        </h1>
+        const result = await dispatch(login(formData));
 
-        <form onSubmit={submitHandler} className="space-y-4">
-          <FormInput
-            name="email"
-            label="Email"
-            type="email"
-            value={email}
-            onChange={onChange}
-            placeholder="john@example.com"
-          />
+        if (login.fulfilled.match(result)) {
+            navigate('/dashboard');
+        }
+    };
 
-          <FormInput
-            name="password"
-            label="Password"
-            type="password"
-            value={password}
-            onChange={onChange}
-            placeholder="password"
-          />
+    return (
+        <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-slate-900 px-4">
+            <div className="w-full max-w-md rounded-2xl bg-white dark:bg-slate-950 p-8 shadow-lg">
+                <h1 className="mb-6 text-center text-2xl font-bold text-gray-800 dark:text-white">
+                    Sign In
+                </h1>
 
-          <button
-            type="submit"
-            disabled={status === "loading"}
-            className="w-full rounded-lg bg-blue-600 py-2 text-sm font-semibold text-white
-                       transition hover:bg-blue-700
-                       disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {status === "loading" ? "Logging in..." : "Login"}
-          </button>
+                {error && (
+                    <div className="mb-4 rounded-lg bg-red-50 dark:bg-red-900/20 p-4 text-sm text-red-600 dark:text-red-400">
+                        {error}
+                    </div>
+                )}
 
-          <div className="mt-4 text-center">
-            <Link
-              to="/forgot-password"
-              className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-            >
-              Forgot password?
-            </Link>
-          </div>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <Input
+                        label="Email"
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="john@example.com"
+                        autoComplete="email"
+                        required
+                    />
 
-          <div className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
-            Don't have an account?{' '}
-            <Link
-              to="/register"
-              className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
-            >
-              Register
-            </Link>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
+                    <Input
+                        label="Password"
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        placeholder="••••••••"
+                        autoComplete="current-password"
+                        required
+                    />
+
+                    <Button type="submit" variant="primary" isLoading={isLoading}>
+                        Sign In
+                    </Button>
+                </form>
+
+                <div className="mt-4 text-center">
+                    <Link
+                        to="/forgot-password"
+                        className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                    >
+                        Forgot password?
+                    </Link>
+                </div>
+
+                <div className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
+                    Don't have an account?{' '}
+                    <Link
+                        to="/register"
+                        className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+                    >
+                        Sign up
+                    </Link>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default Login;

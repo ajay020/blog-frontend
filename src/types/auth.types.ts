@@ -1,0 +1,66 @@
+// src/types/auth.types.ts
+
+export interface User {
+    id: string;
+    name: string;
+    email: string;
+    avatar?: string;
+    bio?: string;
+    role: 'user' | 'admin';
+    isVerified: boolean;
+    website?: string;
+    twitter?: string;
+    github?: string;
+    linkedin?: string;
+    articlesCount: number;
+    followersCount: number;
+    followingCount: number;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface AuthState {
+    user: User | null;
+    token: string | null;
+    isAuthenticated: boolean;
+    isLoading: boolean;
+    error: string | null;
+}
+
+export interface LoginCredentials {
+    email: string;
+    password: string;
+}
+
+export interface RegisterCredentials {
+    name: string;
+    email: string;
+    password: string;
+}
+
+export interface UpdateProfileData {
+    name?: string;
+    email?: string;
+    bio?: string;
+    avatar?: string;
+    website?: string;
+    twitter?: string;
+    github?: string;
+    linkedin?: string;
+}
+
+export interface UpdatePasswordData {
+    currentPassword: string;
+    newPassword: string;
+}
+
+export interface AuthResponse {
+    success: boolean;
+    token: string;
+    user: User;
+}
+
+export interface ErrorResponse {
+    success: false;
+    error: string;
+}

@@ -4,7 +4,7 @@ import { logoutUser, resetStatus } from "../features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { RootState } from "../app/store";
 import PostModal from "./post/post-modal";
-import { LogOut, LucidePencil, Settings, UserCircle, UserCircle2 } from "lucide-react";
+import { LogOut, Settings, UserCircle, UserCircle2 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 
 const Navbar = () => {
@@ -58,12 +58,16 @@ const Navbar = () => {
 
               {user ? (
                 <>
-                  <button
+                  {/* <button
                     className="flex gap-2 items-center border rounded-xl px-2 py-1 hover:text-gray-300"
                     onClick={() => setIsModelOpen(true)}
                   >
                     <LucidePencil size={14} /> Write
-                  </button>
+                  </button> */}
+
+                  <Link
+                    className="flex gap-2 items-center border rounded-xl px-2 py-1 hover:text-gray-300"
+                    to="/article/new" >Write</Link>
 
                   <button
                     onClick={() => setIsMenuOpen(!isMenuOpen)}

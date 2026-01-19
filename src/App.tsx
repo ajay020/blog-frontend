@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Register from './pages/Register';
-import Login from './pages/Login';
+import Login from './pages/Login-old';
 import PageNotFound from './pages/PageNotFound';
 import PostDetails from './pages/PostDetails';
 import { useAppDispatch, useAppSelector } from './app/hooks';
@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { fetchBookmarkedPosts } from './features/auth/authSlice';
 import { selectTheme } from './features/theme/themeSlice';
 import 'react-toastify/dist/ReactToastify.css';
+import CreateArticle from './pages/NewArticle';
 
 function App() {
     const dispatch = useAppDispatch();
@@ -40,6 +41,8 @@ function App() {
                 <Route path='/' element={<Home />} />
                 <Route path='/login' element={<Login />} />
                 <Route path='/register' element={<Register />} />
+                <Route path='/article/new' element={<CreateArticle />} />
+                <Route path='/articles/:id/edit' element={<CreateArticle />} />
                 <Route path='/posts/:postId' element={<PostDetails />} />
                 <Route path="*" element={<PageNotFound />} />
             </Routes>

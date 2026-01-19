@@ -28,7 +28,7 @@ const PostModal = ({ isOpen, onClose, post }: PostModalProps) => {
 
                 {/* Body */}
                 <div className="p-6 space-y-6">
-                    <PostForm post={post} onClose={onClose} />
+                    <PostForm post={post} />
                 </div>
             </div>
         </div>

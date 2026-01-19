@@ -8,10 +8,9 @@ import { toast } from "react-toastify";
 
 interface PostFormProps {
     post?: Post;
-    onClose: () => void;
 }
 
-const PostForm = ({ post, onClose }: PostFormProps) => {
+const PostForm = ({ post }: PostFormProps) => {
     const dispatch = useAppDispatch();
     const status = useAppSelector(state => state.posts.createStatus)
 
@@ -22,10 +21,8 @@ const PostForm = ({ post, onClose }: PostFormProps) => {
         post?.image?.url ?? null
     );
 
-
     useEffect(() => {
         if (status == "succeeded") {
-            onClose()
             dispatch(resetCreateStatus())
         }
     }, [status])
@@ -46,9 +43,6 @@ const PostForm = ({ post, onClose }: PostFormProps) => {
         } else {
             dispatch(createNewPost(formData));
         }
-
-
-        // onClose();
     };
 
     const handleImageChange = async (
@@ -77,9 +71,6 @@ const PostForm = ({ post, onClose }: PostFormProps) => {
 
     return (
         <div className="space-y-4">
-            {
-                status == "loading" && <p>Creating post...</p>
-            }
             {/* Title */}
             <input
                 type="text"
@@ -119,7 +110,6 @@ const PostForm = ({ post, onClose }: PostFormProps) => {
             {/* Actions */}
             <div className="flex justify-end gap-3">
                 <button
-                    onClick={onClose}
                     className="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600"
                 >
                     Cancel
