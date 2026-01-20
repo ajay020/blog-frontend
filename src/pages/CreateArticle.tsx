@@ -11,30 +11,30 @@ const CreateArticle = () => {
 
     const handleSave = async (articleData: CreateArticleData) => {
         console.log('Sending article data:', articleData);
-        console.log('Content structure:', articleData.content);
 
         const result = await dispatch(
             createArticle({
                 title: articleData.title,
                 content: articleData.content,
                 coverImage: articleData.coverImage,
-                status: 'published',
-                tags: [],
+                status: articleData.status,
+                tags: articleData.tags,
             })
         );
 
         if (createArticle.fulfilled.match(result)) {
-            navigate(`/articles/${result.payload.slug}`);
+            if (articleData.status === 'published') {
+                navigate(`/articles/${result.payload.slug}`);
+            } else {
+                // Navigate to dashboard if saved as draft
+                navigate('/dashboard');
+            }
         }
     };
 
-    if (isLoading) {
-        return <p>Loading...</p>
-    }
-
     return (
         <div>
-            <ArticleEditor onSave={handleSave} />
+            <ArticleEditor onSave={handleSave} isLoading={isLoading} />
         </div>
     );
 };

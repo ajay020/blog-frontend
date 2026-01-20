@@ -9,6 +9,7 @@ import {
     selectPagination,
     setCurrentPage,
 } from '@/features/articles/articleSlice';
+import ArticleSearch from '@/components/article/ArticleSearch';
 
 const Articles = () => {
     const dispatch = useAppDispatch();
@@ -31,7 +32,7 @@ const Articles = () => {
     return (
         <div className="max-w-7xl mx-auto px-4 py-12">
             <h1 className="text-4xl font-bold mb-8">All Articles</h1>
-
+            <ArticleSearch />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {articles.map((article) => (
                     <Link

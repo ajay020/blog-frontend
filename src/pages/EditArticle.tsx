@@ -38,12 +38,18 @@ const EditArticle = () => {
                     title: articleData.title,
                     content: articleData.content,
                     coverImage: articleData.coverImage,
+                    tags: articleData.tags,
+                    status: articleData.status,
                 },
             })
         );
 
         if (updateArticle.fulfilled.match(result)) {
-            navigate(`/articles/${result.payload.slug}`);
+            if (articleData.status === 'published') {
+                navigate(`/articles/${result.payload.slug}`);
+            } else {
+                navigate('/dashboard');
+            }
         }
     };
 

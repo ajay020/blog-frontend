@@ -8,12 +8,12 @@ import { Link } from 'react-router-dom';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import CreateArticle from './pages/CreateArticle';
-import Home from './pages/Home';
 import Profile from './pages/Profile';
 import ThemeToggle from './components/ThemeToggle';
 import Login from './pages/Login';
 import ArticleDetail from './pages/ArticleDetail';
 import EditArticle from './pages/EditArticle';
+import Articles from './pages/Articles';
 
 function App2() {
     const dispatch = useAppDispatch();
@@ -31,10 +31,10 @@ function App2() {
             <div className="min-h-screen bg-white dark:bg-gray-900">
                 <Navbar />
                 <Routes>
-                    <Route path="/articles/:slug" element={<ArticleDetail />} />
-
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/articles/:slug" element={<ArticleDetail />} />
+                    <Route path="/" element={<Articles />} />
 
                     {/* Protected Routes */}
                     <Route element={<ProtectedRoute />}>
