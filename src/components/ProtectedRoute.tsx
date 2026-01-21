@@ -1,7 +1,7 @@
 // src/components/ProtectedRoute.tsx
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks';
-import { selectIsAuthenticated, selectAuthLoading } from '../features/auth/authSice2';
+import { selectIsAuthenticated, selectAuthLoading } from '../features/auth/authSlice';
 
 interface ProtectedRouteProps {
     redirectPath?: string;

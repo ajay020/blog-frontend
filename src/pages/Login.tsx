@@ -2,7 +2,7 @@
 import { useState, FormEvent, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { login, clearError, selectAuth } from '../features/auth/authSice2';
+import { login, clearError, selectAuth } from '../features/auth/authSlice';
 import Input from '@/components/UI/Input';
 import Button from '../components/UI/Button';
 

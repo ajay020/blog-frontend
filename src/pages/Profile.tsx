@@ -5,7 +5,7 @@ import {
     selectUser,
     selectAuthLoading,
     updateProfile,
-} from '../features/auth/authSice2';
+} from '../features/auth/authSlice';
 import {
     getMyArticles,
     selectMyArticles,

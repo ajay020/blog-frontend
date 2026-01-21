@@ -6,7 +6,7 @@ import {
     updatePassword,
     deleteAccount,
     logout,
-} from '../features/auth/authSice2';
+} from '../features/auth/authSlice';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import { Lock, LogOut, Trash2, AlertTriangle } from 'lucide-react';

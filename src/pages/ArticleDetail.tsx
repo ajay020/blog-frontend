@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import {
     getArticle,
@@ -8,7 +8,7 @@ import {
     selectArticlesLoading,
     clearCurrentArticle,
 } from '../features/articles/articleSlice';
-import { selectUser } from '../features/auth/authSice2';
+import { selectUser } from '../features/auth/authSlice';
 import ArticleRenderer from '../components/ArtileRenderer';
 
 const ArticleDetail = () => {
@@ -31,7 +31,7 @@ const ArticleDetail = () => {
 
     useEffect(() => {
         if (article && user) {
-            setIsLiked(article.likes.includes(user.id));
+            setIsLiked(article.likes.includes(user._id));
         }
     }, [article, user]);
 
@@ -53,11 +53,12 @@ const ArticleDetail = () => {
     // console.log("Article:", article)
 
     return (
-        <div>
+        <div className=''>
             <ArticleRenderer
                 title={article.title}
                 coverImage={article.coverImage}
                 data={article.content}
+                article={article}
             />
 
             <div className="max-w-3xl mx-auto px-4 py-8">

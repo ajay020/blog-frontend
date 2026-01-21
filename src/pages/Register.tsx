@@ -2,9 +2,9 @@ import { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { registerUser, resetStatus } from "../features/auth/authSlice";
 import { RootState } from "../app/store";
 import FormInput from "@/components/UI/FormInput";
+import { register, selectAuth } from "@/features/auth/authSlice";
 
 const fields = [
   {
@@ -45,10 +45,6 @@ const Register = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { user, status, error } = useAppSelector(
-    (state: RootState) => state.auth
-  );
-
   const [formData, setFormData] = useState<RegisterFormData>({
     name: "",
     email: "",
@@ -58,27 +54,15 @@ const Register = () => {
 
   const { name, email, password, confirmPassword } = formData;
 
-  // Handle auth state changes
-  useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, [user, navigate]);
+  const { isLoading, error } = useAppSelector(selectAuth);
 
-  // Handle errors
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-      dispatch(resetStatus());
-    }
-  }, [error, dispatch]);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!name || !email || !password || !confirmPassword) {
@@ -91,14 +75,17 @@ const Register = () => {
       return;
     }
 
-    dispatch(
-      registerUser({
+    const result = await dispatch(
+      register({
         name,
         email,
         password,
-        confirmPassword,
       })
     );
+
+    if (register.fulfilled.match(result)) {
+      navigate('/dashboard');
+    }
   };
 
   return (
@@ -107,6 +94,13 @@ const Register = () => {
         <h1 className="mb-6 text-center text-2xl font-bold text-gray-800 dark:text-white">
           Create an account
         </h1>
+
+
+        {error && (
+          <div className="mb-4 rounded-lg bg-red-50 dark:bg-red-900/20 p-4 text-sm text-red-600 dark:text-red-400">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={submitHandler} className="space-y-4">
           {fields.map((field) => (
@@ -125,7 +119,7 @@ const Register = () => {
                        transition hover:bg-blue-700
                        disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {status === "loading" ? "Creating account..." : "Register"}
+            {isLoading ? "Creating account..." : "Register"}
           </button>
 
           <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">

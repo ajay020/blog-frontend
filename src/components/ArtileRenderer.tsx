@@ -1,18 +1,21 @@
-// src/components/ArticleRenderer.tsx
 // This component renders the saved Editor.js content
 import { JSX } from 'react';
 import { OutputData } from '@editorjs/editorjs';
+import AuthorInfo from './AuthorInfo';
+import { Article } from '@/types/article.types';
 
 interface ArticleRendererProps {
     data: OutputData;
     title: string;
     coverImage?: string;
+    article?: Article
 }
 
 const ArticleRenderer: React.FC<ArticleRendererProps> = ({
     data,
     title,
     coverImage,
+    article
 }) => {
     const renderBlock = (block: any) => {
         switch (block.type) {
@@ -142,6 +145,8 @@ const ArticleRenderer: React.FC<ArticleRendererProps> = ({
                     className="w-full rounded-lg mb-8 max-h-96 object-cover"
                 />
             )}
+
+            {article && <AuthorInfo article={article} />}
 
             {/* Title */}
             <h1 className="text-5xl font-bold mb-8 text-gray-900 dark:text-white">

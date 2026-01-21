@@ -1,16 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
-import postReducer from '../features/post/postSlice';
-import authReducer from '../features/auth/authSice2';
+import authReducer from '../features/auth/authSlice';
 import themeReducer from '@/features/theme/themeSlice'
 import articleSlice from '@/features/articles/articleSlice'
+import followSlice from "@/features/follow/followSlice"
 
 
 export const store = configureStore({
   reducer: {
-    posts: postReducer,
     auth: authReducer,
     theme: themeReducer,
-    articles: articleSlice
+    articles: articleSlice,
+    follow: followSlice
   },
 });
 

@@ -71,6 +71,7 @@ export interface GetArticlesParams {
     tag?: string;
     category?: string;
     search?: string;
+    author?: string;
 }
 
 export interface ArticleResponse {

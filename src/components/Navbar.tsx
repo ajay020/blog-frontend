@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { RootState } from "../app/store";
 import { LogOut, Settings, UserCircle2 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
-import { selectIsAuthenticated, logout } from "@/features/auth/authSice2";
+import { selectIsAuthenticated, logout } from "@/features/auth/authSlice";
 
 const Navbar = () => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);

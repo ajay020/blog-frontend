@@ -1,156 +1,245 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import authService from './authService';
-import { AuthState, User } from '../../types/auth';
-import { BookmarkedPost, Post } from '../../types/post';
+import authService from '@/services/auth.service';
+import {
+    AuthState,
+    LoginCredentials,
+    RegisterCredentials,
+    UpdateProfileData,
+    UpdatePasswordData,
+    User,
+} from '@/types/auth.types';
+import type { RootState } from '@/app/store';
 
-//get user from localStorage
-const storedUser = JSON.parse(localStorage.getItem("user") || "null") as User | null;
-// console.log("Stored user from localStorage:", storedUser);
-
+// Initial state
 const initialState: AuthState = {
-    user: storedUser,
-    bookmarks: [],
-    status: "idle",
+    user: authService.getUserFromStorage(),
+    token: authService.getTokenFromStorage(),
+    isAuthenticated: authService.isAuthenticated(),
+    isLoading: false,
     error: null,
 };
 
-export const registerUser = createAsyncThunk<
-    User,
-    { name: string; email: string; password: string, confirmPassword: string },
-    { rejectValue: string }
->("auth/register", async (userData, thunkAPI) => {
-    try {
-        return await authService.register(userData);
-    } catch (error: any) {
-        return thunkAPI.rejectWithValue(error.message);
-    }
-});
+// Async thunks
 
-
-export const loginUser = createAsyncThunk<
-    User,
-    { email: string; password: string },
-    { rejectValue: string }
->("auth/login", async (userData, thunkAPI) => {
-    try {
-        return await authService.login(userData);
-    } catch (error: any) {
-        return thunkAPI.rejectWithValue(error.message);
-    }
-});
-
-export const logoutUser = createAsyncThunk(
-    "auth/logout",
-    async () => {
-        authService.logout();
+// Register user
+export const register = createAsyncThunk(
+    'auth/register',
+    async (credentials: RegisterCredentials, { rejectWithValue }) => {
+        try {
+            const response = await authService.register(credentials);
+            return response;
+        } catch (error: any) {
+            return rejectWithValue(error.message || 'Registration failed');
+        }
     }
 );
 
-export const fetchBookmarkedPosts = createAsyncThunk<
-    BookmarkedPost[],
-    void,
-    { rejectValue: string }
->("auth/fetchBookmarkedPosts", async (_, thunkAPI) => {
-    try {
-        const posts = await authService.getBookmarkedPosts();
-        return posts;
-    } catch (error: any) {
-        return thunkAPI.rejectWithValue(error.message);
+// Login user
+export const login = createAsyncThunk(
+    'auth/login',
+    async (credentials: LoginCredentials, { rejectWithValue }) => {
+        try {
+            const response = await authService.login(credentials);
+            return response;
+        } catch (error: any) {
+            return rejectWithValue(error.message || 'Login failed');
+        }
     }
+);
+
+// Get current user
+export const getMe = createAsyncThunk(
+    'auth/getMe',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await authService.getMe();
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.message || 'Failed to fetch user');
+        }
+    }
+);
+
+// Update profile
+export const updateProfile = createAsyncThunk(
+    'auth/updateProfile',
+    async (data: UpdateProfileData, { rejectWithValue }) => {
+        try {
+            const response = await authService.updateProfile(data);
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.message || 'Failed to update profile');
+        }
+    }
+);
+
+// Update password
+export const updatePassword = createAsyncThunk(
+    'auth/updatePassword',
+    async (data: UpdatePasswordData, { rejectWithValue }) => {
+        try {
+            const response = await authService.updatePassword(data);
+            return response;
+        } catch (error: any) {
+            return rejectWithValue(error.message || 'Failed to update password');
+        }
+    }
+);
+
+// Delete account
+export const deleteAccount = createAsyncThunk(
+    'auth/deleteAccount',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await authService.deleteAccount();
+            return response;
+        } catch (error: any) {
+            return rejectWithValue(error.message || 'Failed to delete account');
+        }
+    }
+);
+
+// Logout user (synchronous)
+export const logout = createAsyncThunk('auth/logout', async () => {
+    authService.logout();
 });
 
+// Auth slice
 const authSlice = createSlice({
-    name: "auth",
+    name: 'auth',
     initialState,
     reducers: {
-        resetStatus: (state) => {
-            state.status = "idle";
+        // Clear error
+        clearError: (state) => {
             state.error = null;
         },
-
-        optimisticToggleBookmarkAuth(
-            state,
-            action: PayloadAction<{ post: Post }>
-        ) {
-            const exists = state.bookmarks.find(
-                (p) => p._id === action.payload.post._id
-            );
-
-            if (exists) {
-                // remove
-                state.bookmarks = state.bookmarks.filter(
-                    (p) => p._id !== action.payload.post._id
-                );
-            } else {
-                // add
-                const bookmarkPost = {
-                    _id: action.payload.post._id,
-                    title: action.payload.post.title,
-                    author: action.payload.post.author,
-                    createdAt: action.payload.post.createdAt,
-                }
-                state.bookmarks.unshift(bookmarkPost);
-            }
+        // Set user (useful for updating user data from other slices)
+        setUser: (state, action: PayloadAction<User>) => {
+            state.user = action.payload;
         },
-        optimisticDeleteBookmark(
-            state,
-            action: PayloadAction<{ postId: string }>
-        ) {
-            state.bookmarks = state.bookmarks.filter(post => post._id !== action.payload.postId)
-        }
-
     },
     extraReducers: (builder) => {
+        // Register
         builder
-            // REGISTER
-            .addCase(registerUser.pending, (state) => {
-                state.status = "loading";
+            .addCase(register.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
             })
-            .addCase(registerUser.fulfilled, (state, action) => {
-                state.status = "succeeded";
+            .addCase(register.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isAuthenticated = true;
+                state.user = action.payload.user;
+                state.token = action.payload.token;
+                state.error = null;
+            })
+            .addCase(register.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
+            });
+
+        // Login
+        builder
+            .addCase(login.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(login.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isAuthenticated = true;
+                state.user = action.payload.user;
+                state.token = action.payload.token;
+                state.error = null;
+            })
+            .addCase(login.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
+            });
+
+        // Get Me
+        builder
+            .addCase(getMe.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getMe.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.user = action.payload;
+                state.isAuthenticated = true;
+            })
+            .addCase(getMe.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
+                state.isAuthenticated = false;
+                state.user = null;
+                state.token = null;
+            });
+
+        // Update Profile
+        builder
+            .addCase(updateProfile.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(updateProfile.fulfilled, (state, action) => {
+                state.isLoading = false;
                 state.user = action.payload;
             })
-            .addCase(registerUser.rejected, (state, action) => {
-                state.status = "failed";
-                state.error = action.payload ?? "Registration failed";
-            })
+            .addCase(updateProfile.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
+            });
 
-            // LOGIN
-            .addCase(loginUser.pending, (state) => {
-                state.status = "loading";
+        // Update Password
+        builder
+            .addCase(updatePassword.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
             })
-            .addCase(loginUser.fulfilled, (state, action) => {
-                state.status = "succeeded";
-                state.user = action.payload;
+            .addCase(updatePassword.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.token = action.payload.token;
             })
-            .addCase(loginUser.rejected, (state, action) => {
-                state.status = "failed";
-                state.error = action.payload ?? "Login failed";
-                state.user = null;
-            })
+            .addCase(updatePassword.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
+            });
 
-            // LOGOUT
-            .addCase(logoutUser.fulfilled, (state) => {
+        // Delete Account
+        builder
+            .addCase(deleteAccount.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(deleteAccount.fulfilled, (state) => {
+                state.isLoading = false;
                 state.user = null;
-                state.bookmarks = [];
+                state.token = null;
+                state.isAuthenticated = false;
+                state.error = null;
             })
-            // FETCH BOOKMARKED POSTS
-            .addCase(fetchBookmarkedPosts.pending, (state) => {
-                state.status = "loading";
-            })
-            .addCase(fetchBookmarkedPosts.fulfilled, (state, action) => {
-                state.status = "succeeded";
-                state.bookmarks = action.payload;
-            })
-            .addCase(fetchBookmarkedPosts.rejected, (state, action) => {
-                state.status = "failed";
-                state.error = action.payload ?? "Failed to fetch bookmarked posts";
-            })
-            ;
+            .addCase(deleteAccount.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
+            });
+
+        // Logout
+        builder.addCase(logout.fulfilled, (state) => {
+            state.user = null;
+            state.token = null;
+            state.isAuthenticated = false;
+            state.isLoading = false;
+            state.error = null;
+        });
     },
 });
 
+// Actions
+export const { clearError, setUser } = authSlice.actions;
 
-export const { resetStatus, optimisticToggleBookmarkAuth, optimisticDeleteBookmark } = authSlice.actions;
+// Selectors
+export const selectAuth = (state: RootState) => state.auth;
+export const selectUser = (state: RootState) => state.auth.user;
+export const selectIsAuthenticated = (state: RootState) => state.auth.isAuthenticated;
+export const selectAuthLoading = (state: RootState) => state.auth.isLoading;
+export const selectAuthError = (state: RootState) => state.auth.error;
 
 export default authSlice.reducer;

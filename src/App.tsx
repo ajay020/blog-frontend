@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './app/hooks';
-import { getMe, selectIsAuthenticated, logout, selectUser, } from './features/auth/authSice2';
+import { getMe, selectIsAuthenticated, logout, selectUser, } from './features/auth/authSlice';
 import ProtectedRoute from './components/ProtectedRoute';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -14,6 +14,7 @@ import Articles from './pages/Articles';
 import PageNotFound from './pages/PageNotFound';
 import Navbar from './components/Navbar';
 import Settings from './pages/Settings';
+import UserProfile from './pages/UserProfile';
 
 function App() {
     const dispatch = useAppDispatch();
@@ -43,6 +44,7 @@ function App() {
                         <Route path="/create-article" element={<CreateArticle />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/settings" element={<Settings />} />
+                        <Route path="/users/:userId" element={<UserProfile />} />
                     </Route>
                     <Route path="*" element={<PageNotFound />} />
                 </Routes>
