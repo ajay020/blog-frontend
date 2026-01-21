@@ -1,20 +1,17 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { logoutUser, resetStatus } from "../features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { RootState } from "../app/store";
-import PostModal from "./post/post-modal";
-import { LogOut, Settings, UserCircle, UserCircle2 } from "lucide-react";
+import { LogOut, Settings, UserCircle2 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
+import { selectIsAuthenticated, logout } from "@/features/auth/authSice2";
 
 const Navbar = () => {
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const [isModelOpen, setIsModelOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-
 
   //  Close menu when clicking outside
   useEffect(() => {
@@ -32,9 +29,7 @@ const Navbar = () => {
   }, []);
 
   const onLogout = () => {
-    dispatch(logoutUser());
-    dispatch(resetStatus());
-    navigate("/");
+    dispatch(logout());
     setIsMenuOpen(false)
   };
 
@@ -52,28 +47,27 @@ const Navbar = () => {
             </div>
 
             {/* Auth Actions */}
-            <div className="flex space-x-4">
+            <div className="flex items-center space-x-4">
 
-              <ThemeToggle />
 
-              {user ? (
+
+              {isAuthenticated ? (
                 <>
-                  {/* <button
-                    className="flex gap-2 items-center border rounded-xl px-2 py-1 hover:text-gray-300"
-                    onClick={() => setIsModelOpen(true)}
-                  >
-                    <LucidePencil size={14} /> Write
-                  </button> */}
-
                   <Link
                     className="flex gap-2 items-center border rounded-xl px-2 py-1 hover:text-gray-300"
-                    to="/article/new" >Write</Link>
+                    to="/create-article" >Write</Link>
+
+                  <Link to="/dashboard">Dashboard</Link>
 
                   <button
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                     className=" hover:text-gray-300 px-3 py-1 rounded"
                   >
-                    <UserCircle size={28} />
+                    <img
+                      src={user?.avatar || 'default-avatar.png'}
+                      alt={user?.name}
+                      className="w-8 h-8 rounded-full object-cover border-2 hover:border-gray-400"
+                    />
                   </button>
                 </>
               ) : (
@@ -82,6 +76,8 @@ const Navbar = () => {
                   <Link to="/register" className="hover:text-gray-300">Register</Link>
                 </>
               )}
+
+              <ThemeToggle />
             </div>
           </div>
         </div>
@@ -91,22 +87,24 @@ const Navbar = () => {
               ref={menuRef}
               className="absolute py-2 right-2 top-full bg-white  dark:bg-slate-800 w-48 ring-1 ring-black/20 z-50">
               {/* Profile header */}
-              <div className="flex gap-3 py-3 px-4 items-center border-b border-slate-600">
-                <UserCircle2 className="text-gray-900 dark:text-white" size={28} />
-                <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name}</p>
-                  <p className="text-xs text-slate-400 truncate">{user?.email}</p>
+              <Link to={"/profile"}>
+                <div className="flex gap-3 py-3 px-4 items-center border-b border-slate-600">
+                  <UserCircle2 className="text-gray-900 dark:text-white" size={28} />
+                  <div>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name}</p>
+                    <p className="text-xs text-slate-400 truncate">view profile</p>
+                  </div>
                 </div>
-              </div>
+              </Link>
 
               {/* Menu items */}
               <ul className="flex flex-col py-2">
                 <li>
-                  <button className="flex items-center gap-2 w-full 
+                  <Link to="/settings" className="flex items-center gap-2 w-full 
                   px-4 py-2 text-sm dark:text-white text-slate-900 dark:hover:text-slate-200 hover:text-slate-950 rounded-md">
                     <Settings size={16} />
                     Settings
-                  </button>
+                  </Link>
                 </li>
                 <li>
                   <button
@@ -123,7 +121,6 @@ const Navbar = () => {
           )
         }
       </nav>
-      <PostModal isOpen={isModelOpen} onClose={() => { setIsModelOpen(false) }} />
     </>
   );
 };

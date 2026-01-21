@@ -3,17 +3,17 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { getMe, selectIsAuthenticated, logout, selectUser, } from './features/auth/authSice2';
 import ProtectedRoute from './components/ProtectedRoute';
-import { Link } from 'react-router-dom';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import CreateArticle from './pages/CreateArticle';
 import Profile from './pages/Profile';
-import ThemeToggle from './components/ThemeToggle';
 import Login from './pages/Login';
 import ArticleDetail from './pages/ArticleDetail';
 import EditArticle from './pages/EditArticle';
 import Articles from './pages/Articles';
 import PageNotFound from './pages/PageNotFound';
+import Navbar from './components/Navbar';
+import Settings from './pages/Settings';
 
 function App() {
     const dispatch = useAppDispatch();
@@ -42,6 +42,7 @@ function App() {
                         <Route path="/edit-article/:id" element={<EditArticle />} />
                         <Route path="/create-article" element={<CreateArticle />} />
                         <Route path="/profile" element={<Profile />} />
+                        <Route path="/settings" element={<Settings />} />
                     </Route>
                     <Route path="*" element={<PageNotFound />} />
                 </Routes>
@@ -51,46 +52,3 @@ function App() {
 }
 
 export default App;
-
-
-const Navbar = () => {
-    const isAuthenticated = useAppSelector(selectIsAuthenticated);
-    const user = useAppSelector(selectUser);
-    const dispatch = useAppDispatch();
-
-    const handleLogout = () => {
-        dispatch(logout());
-    };
-
-    return (
-        <nav className="bg-white dark:bg-gray-800 shadow">
-            <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
-                <Link to="/" className="text-xl font-bold">My Blog</Link>
-
-                <div className="flex items-center gap-4">
-                    {isAuthenticated ? (
-                        <>
-                            <Link to="/dashboard">Dashboard</Link>
-                            <Link to="/create-article">Write</Link>
-                            <div className="flex items-center gap-2">
-                                <img
-                                    src={user?.avatar || 'default-avatar.png'}
-                                    alt={user?.name}
-                                    className="w-8 h-8 rounded-full"
-                                />
-                                <span>{user?.name}</span>
-                            </div>
-                            <button onClick={handleLogout}>Logout</button>
-                        </>
-                    ) : (
-                        <>
-                            <Link to="/login">Login</Link>
-                            <Link to="/register">Sign Up</Link>
-                        </>
-                    )}
-                    <ThemeToggle />
-                </div>
-            </div>
-        </nav>
-    );
-};

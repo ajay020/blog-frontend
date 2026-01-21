@@ -1,4 +1,3 @@
-// src/services/auth.service.ts
 import api from './api';
 import {
     LoginCredentials,
@@ -77,6 +76,16 @@ class AuthService {
         if (response.data.token) {
             localStorage.setItem('token', response.data.token);
         }
+
+        return response.data;
+    }
+
+    // Delete account
+    async deleteAccount(): Promise<{ success: boolean; message: string }> {
+        const response = await api.delete<{ success: boolean; message: string }>('/auth/account');
+
+        // Clear localStorage after successful deletion
+        this.logout();
 
         return response.data;
     }

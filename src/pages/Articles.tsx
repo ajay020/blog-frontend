@@ -1,6 +1,4 @@
-// src/pages/Articles.tsx
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import {
     getArticles,
@@ -9,7 +7,7 @@ import {
     selectPagination,
     setCurrentPage,
 } from '@/features/articles/articleSlice';
-import ArticleSearch from '@/components/article/ArticleSearch';
+import ArticleCard from '@/components/article/ArticleCard';
 
 const Articles = () => {
     const dispatch = useAppDispatch();
@@ -30,32 +28,10 @@ const Articles = () => {
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 py-12">
-            <h1 className="text-4xl font-bold mb-8">All Articles</h1>
-            <ArticleSearch />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="bg-white dark:bg-slate-900">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 p-4">
                 {articles.map((article) => (
-                    <Link
-                        key={article._id}
-                        to={`/articles/${article.slug}`}
-                        className="border rounded-lg p-4 hover:shadow-lg transition"
-                    >
-                        {article.coverImage && (
-                            <img
-                                src={article.coverImage}
-                                alt={article.title}
-                                className="w-full h-48 object-cover rounded mb-4"
-                            />
-                        )}
-                        <h2 className="text-xl font-bold mb-2">{article.title}</h2>
-                        <p className="text-gray-600 dark:text-gray-400 mb-2">
-                            {article.excerpt}
-                        </p>
-                        <div className="flex items-center justify-between text-sm">
-                            <span>{article.author.name}</span>
-                            <span>{article.readingTime} min read</span>
-                        </div>
-                    </Link>
+                    <ArticleCard key={article._id} article={article} />
                 ))}
             </div>
 
