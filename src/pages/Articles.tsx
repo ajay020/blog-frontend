@@ -24,12 +24,16 @@ const Articles = () => {
     };
 
     if (isLoading) {
-        return <div>Loading articles...</div>;
+        return (
+            <div className="flex h-screen items-center justify-center">
+                <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+            </div>
+        );
     }
 
     return (
-        <div className="bg-white dark:bg-slate-900">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 p-4">
+        <div className="bg-white dark:bg-slate-900 flex flex-col items-center">
+            <div className="flex flex-col gap-4 w-[50%] mt-12">
                 {articles.map((article) => (
                     <ArticleCard key={article._id} article={article} />
                 ))}

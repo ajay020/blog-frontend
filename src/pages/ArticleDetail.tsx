@@ -1,23 +1,24 @@
-import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import {
     getArticle,
-    toggleLike,
     selectCurrentArticle,
     selectArticlesLoading,
     clearCurrentArticle,
 } from '../features/articles/articleSlice';
-import { selectUser } from '../features/auth/authSlice';
 import ArticleRenderer from '../components/ArtileRenderer';
+import LikeButton from '../components/LikeButton';
+import FollowButton from '../components/FollowButton';
+import { selectUser } from '../features/auth/authSlice';
+import { Link } from 'react-router-dom';
 
 const ArticleDetail = () => {
     const { slug } = useParams<{ slug: string }>();
     const dispatch = useAppDispatch();
     const article = useAppSelector(selectCurrentArticle);
     const isLoading = useAppSelector(selectArticlesLoading);
-    const user = useAppSelector(selectUser);
-    const [isLiked, setIsLiked] = useState(false);
+    const currentUser = useAppSelector(selectUser);
 
     useEffect(() => {
         if (slug) {
@@ -29,47 +30,118 @@ const ArticleDetail = () => {
         };
     }, [slug, dispatch]);
 
-    useEffect(() => {
-        if (article && user) {
-            setIsLiked(article.likes.includes(user._id));
-        }
-    }, [article, user]);
-
-    const handleLike = () => {
-        if (article) {
-            dispatch(toggleLike(article._id));
-            setIsLiked(!isLiked);
-        }
-    };
-
     if (isLoading) {
-        return <div>Loading article...</div>;
+        return (
+            <div className="flex h-screen items-center justify-center">
+                <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+            </div>
+        );
     }
 
     if (!article) {
-        return <div>Article not found</div>;
+        return (
+            <div className="flex h-screen items-center justify-center">
+                <p className="text-gray-600 dark:text-gray-400">Article not found</p>
+            </div>
+        );
     }
 
-    // console.log("Article:", article)
-
     return (
-        <div className=''>
+        <div className="min-h-screen bg-white dark:bg-gray-900">
+
+            {/* Article Content */}
             <ArticleRenderer
                 title={article.title}
                 coverImage={article.coverImage}
                 data={article.content}
-                article={article}
             />
 
-            <div className="max-w-3xl mx-auto px-4 py-8">
-                <button
-                    onClick={handleLike}
-                    disabled={!user}
-                    className={`flex items-center gap-2 px-4 py-2 rounded ${isLiked ? 'bg-red-500 text-white' : 'bg-gray-200'
-                        }`}
-                >
-                    ❤️ {article.likesCount} Likes
-                </button>
+            {/* Engagement Section */}
+            <div className="max-w-3xl mx-auto px-4 py-8 border-t border-gray-200 dark:border-gray-800">
+                <div className="flex items-center justify-between mb-8">
+                    {/* Like Button */}
+                    <LikeButton
+                        articleId={article._id}
+                        likesCount={article.likesCount}
+                        likes={article.likes}
+                        variant="default"
+                    />
+
+                    {/* Share & Stats */}
+                    <div className="flex items-center gap-4 text-gray-600 dark:text-gray-400">
+                        <span>👁️ {article.views} views</span>
+                        <span>⏱️ {article.readingTime} min read</span>
+                    </div>
+                </div>
+
+                {/* Author Section */}
+                <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6">
+                    <div className="flex items-start gap-4">
+                        <Link to={`/users/${article.author._id}`}>
+                            <img
+                                src={article.author.avatar || '/default-avatar.png'}
+                                alt={article.author.name}
+                                className="w-16 h-16 rounded-full object-cover"
+                            />
+                        </Link>
+
+                        <div className="flex-1">
+                            <div className="flex items-center justify-between mb-2">
+                                <Link
+                                    to={`/users/${article.author._id}`}
+                                    className="text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400"
+                                >
+                                    {article.author.name}
+                                </Link>
+                                {currentUser?._id !== article.author._id && (
+                                    <FollowButton userId={article.author._id} />
+                                )}
+                            </div>
+
+                            {article.author.bio && (
+                                <p className="text-gray-600 dark:text-gray-400 mb-3">
+                                    {article.author.bio}
+                                </p>
+                            )}
+
+                            <div className="flex gap-4 text-sm text-gray-500 dark:text-gray-400">
+                                <span>{article.author.articlesCount || 0} Articles</span>
+                                <span>{article.author.followersCount || 0} Followers</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Tags */}
+                {article.tags && article.tags.length > 0 && (
+                    <div className="mt-8">
+                        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                            Tags
+                        </h3>
+                        <div className="flex flex-wrap gap-2">
+                            {article.tags.map((tag) => (
+                                <Link
+                                    key={tag}
+                                    to={`/articles?tag=${tag}`}
+                                    className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                                >
+                                    #{tag}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Published Date */}
+                <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Published on {new Date(article.publishedAt || article.createdAt).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                        })}
+                    </p>
+                </div>
             </div>
         </div>
     );

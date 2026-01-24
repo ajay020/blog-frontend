@@ -1,8 +1,7 @@
-// This component renders the saved Editor.js content
 import { JSX } from 'react';
 import { OutputData } from '@editorjs/editorjs';
-import AuthorInfo from './AuthorInfo';
 import { Article } from '@/types/article.types';
+import { Clock, Heart } from 'lucide-react';
 
 interface ArticleRendererProps {
     data: OutputData;
@@ -17,6 +16,10 @@ const ArticleRenderer: React.FC<ArticleRendererProps> = ({
     coverImage,
     article
 }) => {
+
+    const publishedAt = article?.publishedAt ? new Date(article?.publishedAt) : null;
+
+
     const renderBlock = (block: any) => {
         switch (block.type) {
             case 'header':
@@ -146,25 +149,28 @@ const ArticleRenderer: React.FC<ArticleRendererProps> = ({
                 />
             )}
 
-            {article && <AuthorInfo article={article} />}
-
             {/* Title */}
             <h1 className="text-5xl font-bold mb-8 text-gray-900 dark:text-white">
                 {title}
             </h1>
+
+            {/* Metadata */}
+            <div className=" flex gap-4 p-4 border-y border-gray-200 dark:border-gray-800">
+                <div className='flex items-center gap-1'>
+                    <Heart size={14} />
+                    {article?.likesCount}
+                </div>
+                <div className='flex items-center gap-1'>
+                    <Clock size={14} /> {article?.readingTime} min
+                </div>
+                {publishedAt && <span>{publishedAt.toLocaleDateString()}</span>}
+            </div>
 
             {/* Article Content */}
             <div className="prose prose-lg dark:prose-invert max-w-none">
                 {data.blocks.map((block, index) => (
                     <div key={index}>{renderBlock(block)}</div>
                 ))}
-            </div>
-
-            {/* Metadata */}
-            <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Published on {new Date().toLocaleDateString()}
-                </p>
             </div>
         </article>
     );

@@ -49,9 +49,9 @@ const FollowButton: React.FC<FollowButtonProps> = ({ userId, className = '' }) =
         <button
             onClick={handleToggleFollow}
             disabled={isLoading}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed 
+            className={`flex items-center gap-2 px-4 py-2 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed 
                 ${isFollowing
-                    ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
+                    ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500'
                     : 'text-black hover:text-gray-600'
                 } ${className}`
             }
@@ -59,12 +59,10 @@ const FollowButton: React.FC<FollowButtonProps> = ({ userId, className = '' }) =
             {
                 isFollowing ? (
                     <>
-                        <UserMinus className="w-4 h-4" />
                         Following
                     </>
                 ) : (
                     <>
-                        <UserPlus className="w-4 h-4" />
                         Follow
                     </>
                 )}

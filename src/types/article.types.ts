@@ -1,4 +1,3 @@
-// src/types/article.types.ts
 import { OutputData } from '@editorjs/editorjs';
 
 export interface Article {
@@ -14,6 +13,8 @@ export interface Article {
         email: string;
         avatar?: string;
         bio?: string;
+        articlesCount: number;
+        followersCount: number;
     };
     status: 'draft' | 'published' | 'archived';
     publishedAt?: string;

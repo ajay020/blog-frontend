@@ -1,22 +1,25 @@
+import { Article } from '@/types/article.types';
 import { Heart } from 'lucide-react'
 
 type LikeButtonProps = {
-    post: any;
-    isUpvoted: boolean;
+    article: Article;
+    isLiked: boolean;
     toggleUpvote: () => void;
+    disabled?: boolean
 }
 
-function LikeButton({ post, isUpvoted, toggleUpvote }: LikeButtonProps) {
+function LikeButton({ article, isLiked, toggleUpvote, disabled }: LikeButtonProps) {
     return (
         <button
+            disabled={disabled}
             onClick={toggleUpvote}
             className={
                 `flex items-center gap-1 text-sm 
-            ${isUpvoted ? "text-red-500" : "text-slate-400"}`
+            ${isLiked ? "text-red-500" : "text-slate-400"}`
             }
         >
-            <Heart size={18} fill={isUpvoted ? "currentColor" : "none"} />
-            {post.upvotes.length}
+            <Heart size={18} fill={isLiked ? "currentColor" : "none"} />
+            {article?.likesCount}
         </button>
     )
 }

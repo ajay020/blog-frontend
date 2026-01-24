@@ -1,19 +1,27 @@
 import { Link } from 'react-router-dom';
 import { Article } from '@/types/article.types';
+import AuthorInfo from '../AuthorInfo';
+import { Clock, Heart, HeartHandshake, Timer, TimerIcon, Watch } from 'lucide-react';
 
 interface ArticleCardProps {
     article: Article;
 }
 
 const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
+
+    const publishedAt = article.publishedAt ? new Date(article.publishedAt) : null;
+
     return (
-        <Link
-            to={`/articles/${article.slug}`}
-            className=" block border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
+        <div
+            className="px-2 py-1 block border border-gray-400 dark:border-gray-700 rounded-lg"
         >
-            <div className='flex flex-col justify-between gap-2 p-1'>
-                <div className='flex items-center gap-2'>
-                    <div className="p-4">
+            <AuthorInfo article={article} showFollowBtn={false} />
+
+            <Link
+                to={`/articles/${article.slug}`}
+            >
+                <div className='flex justify-between items-center gap-1'>
+                    <div className='flex-col items-center gap-2'>
                         <h2 className="text-xl font-bold mb-2 text-gray-900 dark:text-white line-clamp-2">
                             {article.title}
                         </h2>
@@ -31,35 +39,31 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
                                 </span>
                             ))}
                         </div>
-
                     </div>
-
                     {article.coverImage && (
                         <img
                             src={article.coverImage}
                             alt={article.title}
-                            className="w-35 h-40 object-cover"
+                            className="w-[120px] h-[80px]"
                         />
                     )}
                 </div>
-                {/* actions  */}
-                <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                    <div className="flex items-center gap-2">
-                        <img
-                            src={article.author.avatar || '/default-avatar.png'}
-                            alt={article.author.name}
-                            className="w-6 h-6 rounded-full"
-                        />
-                        <span>{article.author.name}</span>
-                    </div>
+            </Link>
 
-                    <div className="flex items-center gap-3">
-                        <span>❤️ {article.likesCount}</span>
-                        <span>⏱️ {article.readingTime} min</span>
+            {/* actions  */}
+            <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                <div className="flex items-center gap-4">
+                    {publishedAt && <span>{publishedAt.toLocaleDateString()}</span>}
+                    <div className='flex items-center gap-1'>
+                        <Heart size={14} />
+                        {article.likesCount}
+                    </div>
+                    <div className='flex items-center gap-1'>
+                        <Clock size={14} /> {article.readingTime} min
                     </div>
                 </div>
             </div>
-        </Link>
+        </div>
     );
 };
 
