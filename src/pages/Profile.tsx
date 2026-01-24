@@ -117,7 +117,7 @@ const Profile = () => {
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             <div className="max-w-5xl mx-auto px-4 py-12">
                 {/* Profile Header */}
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-8">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-8 ">
                     <div className="flex flex-col md:flex-row gap-8">
                         {/* Avatar */}
                         <div className="flex flex-col items-center">
