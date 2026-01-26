@@ -12,6 +12,7 @@ import LikeButton from '../components/LikeButton';
 import FollowButton from '../components/FollowButton';
 import { selectUser } from '../features/auth/authSlice';
 import { Link } from 'react-router-dom';
+import CommentsSection from '@/components/CommentsSection';
 
 const ArticleDetail = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -142,6 +143,9 @@ const ArticleDetail = () => {
                         })}
                     </p>
                 </div>
+
+                {/* Add Comments Section */}
+                <CommentsSection articleId={article._id} />
             </div>
         </div>
     );
