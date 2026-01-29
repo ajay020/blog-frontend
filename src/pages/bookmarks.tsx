@@ -1,30 +1,26 @@
-// src/pages/Articles.tsx (With Infinite Scroll)
-import { useEffect, useRef, useCallback } from 'react';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
+// pages/Bookmarks.tsx
+import React, { useEffect, useRef, useCallback } from 'react';
+import { Bookmark as BookmarkIcon } from 'lucide-react';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
-    getArticles,
-    selectArticles,
-    selectArticlesLoading,
-    selectPagination,
-} from '../features/articles/articleSlice';
+    getBookmarks,
+    selectBookmarks,
+    selectBookmarksLoading,
+    selectBookmarksPagination,
+} from '@/features/bookmark/bookmarkSlice';
 import ArticleCard from '@/components/article/ArticleCard';
 
-
-const Articles = () => {
+const Bookmarks: React.FC = () => {
     const dispatch = useAppDispatch();
-    const articles = useAppSelector(selectArticles);
-    const isLoading = useAppSelector(selectArticlesLoading);
-    const pagination = useAppSelector(selectPagination);
+    const bookmarks = useAppSelector(selectBookmarks);
+    const isLoading = useAppSelector(selectBookmarksLoading);
+    const pagination = useAppSelector(selectBookmarksPagination);
 
-    // Ref for the observer target
     const observerTarget = useRef<HTMLDivElement>(null);
-
-    // Track if we're currently fetching
     const isFetchingRef = useRef(false);
 
-    // Load more articles
+    // Load more bookmarks
     const loadMore = useCallback(() => {
-        // Don't load if already loading or no more pages
         if (
             isFetchingRef.current ||
             isLoading ||
@@ -36,7 +32,7 @@ const Articles = () => {
         isFetchingRef.current = true;
         const nextPage = pagination.currentPage + 1;
 
-        dispatch(getArticles({ page: nextPage, limit: 10 })).finally(() => {
+        dispatch(getBookmarks({ page: nextPage, limit: 10 })).finally(() => {
             isFetchingRef.current = false;
         });
     }, [dispatch, isLoading, pagination.currentPage, pagination.totalPages]);
@@ -51,7 +47,7 @@ const Articles = () => {
             },
             {
                 threshold: 0.1,
-                rootMargin: '100px', // Start loading 100px before reaching the bottom
+                rootMargin: '100px',
             }
         );
 
@@ -69,25 +65,32 @@ const Articles = () => {
 
     // Initial load
     useEffect(() => {
-        if (articles.length === 0) {
-            dispatch(getArticles({ page: 1, limit: 10 }));
+        if (bookmarks.length === 0) {
+            dispatch(getBookmarks({ page: 1, limit: 10 }));
         }
-    }, [dispatch, articles.length]);
+    }, [dispatch, bookmarks.length]);
 
     return (
         <div className="min-h-screen bg-white dark:bg-slate-900">
             <div className="max-w-3xl mx-auto px-4 py-12">
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-8">
+                    <BookmarkIcon size={32} className="text-blue-600 dark:text-blue-400" />
+                    <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+                        My Bookmarks
+                    </h1>
+                </div>
 
                 {/* Initial Loading */}
-                {isLoading && articles.length === 0 ? (
+                {isLoading && bookmarks.length === 0 ? (
                     <div className="flex justify-center items-center py-20">
                         <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
                     </div>
                 ) : (
                     <>
-                        {/* Articles List */}
+                        {/* Bookmarks List */}
                         <div className="flex flex-col gap-4">
-                            {articles.map((article) => (
+                            {bookmarks.map((article) => (
                                 <ArticleCard key={article._id} article={article} />
                             ))}
                         </div>
@@ -106,20 +109,27 @@ const Articles = () => {
 
                         {/* End Message */}
                         {pagination.currentPage >= pagination.totalPages &&
-                            articles.length > 0 && (
+                            bookmarks.length > 0 && (
                                 <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                                     <p>You've reached the end! 🎉</p>
                                     <p className="text-sm mt-2">
-                                        {pagination.total} articles in total
+                                        {pagination.total} bookmarked articles
                                     </p>
                                 </div>
                             )}
 
-                        {/* No Articles */}
-                        {articles.length === 0 && !isLoading && (
+                        {/* No Bookmarks */}
+                        {bookmarks.length === 0 && !isLoading && (
                             <div className="text-center py-20">
-                                <p className="text-gray-500 dark:text-gray-400 text-lg">
-                                    No articles found
+                                <BookmarkIcon
+                                    size={64}
+                                    className="mx-auto mb-4 text-gray-300 dark:text-gray-600"
+                                />
+                                <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">
+                                    No bookmarks yet
+                                </p>
+                                <p className="text-gray-400 dark:text-gray-500 text-sm">
+                                    Start bookmarking articles to read them later!
                                 </p>
                             </div>
                         )}
@@ -130,4 +140,4 @@ const Articles = () => {
     );
 };
 
-export default Articles;
+export default Bookmarks;

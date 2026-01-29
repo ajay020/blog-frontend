@@ -4,6 +4,7 @@ import themeReducer from '@/features/theme/themeSlice'
 import articleSlice from '@/features/articles/articleSlice'
 import followSlice from "@/features/follow/followSlice"
 import commentReducer from '@/features/comments/commentSlice';
+import bookmarkReducer from "@/features/bookmark/bookmarkSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     articles: articleSlice,
     follow: followSlice,
     comments: commentReducer,
+    bookmarks: bookmarkReducer
   },
 });
 

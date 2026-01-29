@@ -49,12 +49,11 @@ const Navbar = () => {
             {/* Auth Actions */}
             <div className="flex items-center space-x-4">
 
-
-
               {isAuthenticated ? (
                 <>
                   <Link
-                    className="flex gap-2 items-center border rounded-xl px-2 py-1 hover:text-gray-300"
+                    className="flex gap-2 items-center border
+                    rounded-xl px-2 py-1 hover:text-gray-300"
                     to="/create-article" >Write</Link>
 
                   <Link to="/dashboard">Dashboard</Link>

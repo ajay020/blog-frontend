@@ -15,6 +15,7 @@ import PageNotFound from './pages/PageNotFound';
 import Navbar from './components/Navbar';
 import Settings from './pages/Settings';
 import UserProfile from './pages/UserProfile';
+import Bookmarks from './pages/bookmarks';
 
 function App() {
     const dispatch = useAppDispatch();
@@ -45,6 +46,8 @@ function App() {
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/settings" element={<Settings />} />
                         <Route path="/users/:userId" element={<UserProfile />} />
+                        <Route path="/bookmarks" element={<Bookmarks />} />
+
                     </Route>
                     <Route path="*" element={<PageNotFound />} />
                 </Routes>

@@ -175,7 +175,20 @@ const articleSlice = createSlice({
             })
             .addCase(getArticles.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.articles = action.payload.data;
+
+                // If page 1, replace articles (refresh)
+                // Otherwise, append for infinite scroll
+                if (action.payload.currentPage === 1) {
+                    state.articles = action.payload.data;
+                } else {
+                    // Append new articles, avoiding duplicates
+                    const existingIds = new Set(state.articles.map(a => a._id));
+                    const newArticles = action.payload.data.filter(
+                        article => !existingIds.has(article._id)
+                    );
+                    state.articles = [...state.articles, ...newArticles];
+                }
+
                 state.pagination = {
                     currentPage: action.payload.currentPage,
                     totalPages: action.payload.totalPages,
@@ -202,7 +215,7 @@ const articleSlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload as string;
             });
-            
+
         // Get Article By ID (for editing)
         builder
             .addCase(getArticleById.pending, (state) => {
