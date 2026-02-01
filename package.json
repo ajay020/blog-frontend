@@ -13,6 +13,7 @@
     "@editorjs/list": "^2.0.9",
     "@editorjs/quote": "^2.7.6",
     "@editorjs/table": "^2.4.5",
+    "@radix-ui/react-hover-card": "^1.1.15",
     "@reduxjs/toolkit": "^2.11.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",

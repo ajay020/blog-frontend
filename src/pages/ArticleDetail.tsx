@@ -8,11 +8,11 @@ import {
     clearCurrentArticle,
 } from '../features/articles/articleSlice';
 import ArticleRenderer from '../components/ArtileRenderer';
-import LikeButton from '../components/LikeButton';
 import FollowButton from '../components/FollowButton';
 import { selectUser } from '../features/auth/authSlice';
 import { Link } from 'react-router-dom';
 import CommentsSection from '@/components/CommentsSection';
+import ArticleActions from '@/components/ArticleActions';
 
 const ArticleDetail = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -55,25 +55,19 @@ const ArticleDetail = () => {
                 title={article.title}
                 coverImage={article.coverImage}
                 data={article.content}
+                article={article}
             />
 
             {/* Engagement Section */}
             <div className="max-w-3xl mx-auto px-4 py-8 border-t border-gray-200 dark:border-gray-800">
-                <div className="flex items-center justify-between mb-8">
-                    {/* Like Button */}
-                    <LikeButton
-                        articleId={article._id}
-                        likesCount={article.likesCount}
-                        likes={article.likes}
-                        variant="default"
-                    />
-
-                    {/* Share & Stats */}
-                    <div className="flex items-center gap-4 text-gray-600 dark:text-gray-400">
-                        <span>👁️ {article.views} views</span>
-                        <span>⏱️ {article.readingTime} min read</span>
-                    </div>
-                </div>
+                <ArticleActions
+                    articleId={article._id}
+                    likes={article.likes}
+                    likesCount={article.likesCount}
+                    commentsCount={article.commentsCount}
+                    views={article.views}
+                    readingTime={article.readingTime}
+                />
 
                 {/* Author Section */}
                 <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6">
@@ -132,17 +126,6 @@ const ArticleDetail = () => {
                         </div>
                     </div>
                 )}
-
-                {/* Published Date */}
-                <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800">
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Published on {new Date(article.publishedAt || article.createdAt).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                        })}
-                    </p>
-                </div>
 
                 {/* Add Comments Section */}
                 <CommentsSection articleId={article._id} />

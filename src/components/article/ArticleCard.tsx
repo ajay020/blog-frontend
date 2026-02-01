@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Clock } from 'lucide-react';
 import { Article } from '@/types/article.types';
+import AuthorInfo from '../AuthorInfo';
 import BookmarkButton from '../BookMarkButton';
 
 interface ArticleCardProps {
@@ -14,16 +15,10 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
     return (
         <div className="px-4 py-4 block border border-gray-400 dark:border-gray-700 rounded-lg hover:shadow-lg transition-shadow">
             {/* Author Info */}
-            <div className="flex items-center gap-2 mb-3">
-                <img
-                    src={article.author.avatar || '/default-avatar.png'}
-                    alt={article.author.name}
-                    className="w-8 h-8 rounded-full"
-                />
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {article.author.name}
-                </span>
-            </div>
+            <AuthorInfo
+                article={article}
+                variant="minimal"
+            />
 
             <Link to={`/articles/${article.slug}`}>
                 <div className="flex justify-between items-start gap-4">
@@ -61,7 +56,11 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
             {/* Actions */}
             <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-4">
-                    {publishedAt && <span>{publishedAt.toLocaleDateString()}</span>}
+                    {publishedAt && <span>{publishedAt.toLocaleDateString("en-US", {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                    })}</span>}
                     <div className="flex items-center gap-1">
                         <Heart size={14} />
                         {article.likesCount}

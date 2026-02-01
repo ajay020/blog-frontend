@@ -12,7 +12,7 @@ const Navbar = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-
+  
   //  Close menu when clicking outside
   useEffect(() => {
 
@@ -125,5 +125,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-

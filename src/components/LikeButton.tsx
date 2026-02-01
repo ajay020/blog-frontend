@@ -8,7 +8,7 @@ interface LikeButtonProps {
     articleId: string;
     likesCount: number;
     likes: string[];
-    variant?: 'default' | 'compact' | 'icon-only';
+    variant?: 'default' | 'compact' | 'icon';
     className?: string;
 }
 
@@ -51,7 +51,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
     };
 
     // Variant: Icon Only
-    if (variant === 'icon-only') {
+    if (variant === 'icon') {
         return (
             <button
                 onClick={handleLike}

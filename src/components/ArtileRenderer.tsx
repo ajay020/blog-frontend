@@ -1,26 +1,26 @@
+import React from 'react';
 import { JSX } from 'react';
 import { OutputData } from '@editorjs/editorjs';
 import { Article } from '@/types/article.types';
-import { Clock, Heart } from 'lucide-react';
+import ArticleActions from './ArticleActions';
+import AuthorInfo from './AuthorInfo';
 
 interface ArticleRendererProps {
     data: OutputData;
     title: string;
     coverImage?: string;
-    article?: Article
+    article?: Article;
 }
 
 const ArticleRenderer: React.FC<ArticleRendererProps> = ({
     data,
     title,
     coverImage,
-    article
+    article,
 }) => {
 
-    const publishedAt = article?.publishedAt ? new Date(article?.publishedAt) : null;
-
-
     const renderBlock = (block: any) => {
+
         switch (block.type) {
             case 'header':
                 const HeaderTag = `h${block.data.level}` as keyof JSX.IntrinsicElements;
@@ -40,19 +40,20 @@ const ArticleRenderer: React.FC<ArticleRendererProps> = ({
 
             case 'list':
                 const ListTag = block.data.style === 'ordered' ? 'ol' : 'ul';
-                const listClass = block.data.style === 'ordered'
-                    ? 'list-decimal ml-6 my-4 space-y-2 text-gray-800 dark:text-gray-200'
-                    : 'list-disc ml-6 my-4 space-y-2 text-gray-800 dark:text-gray-200';
+                const listClass =
+                    block.data.style === 'ordered'
+                        ? 'list-decimal ml-6 my-4 space-y-2 text-gray-800 dark:text-gray-200'
+                        : 'list-disc ml-6 my-4 space-y-2 text-gray-800 dark:text-gray-200';
 
                 return (
                     <ListTag className={listClass}>
                         {block.data.items.map((item: any, index: number) => {
-                            // Handle both new format (object with content) and old format (string)
-                            const itemText = typeof item === 'object' && item.content
-                                ? item.content
-                                : typeof item === 'string'
-                                    ? item
-                                    : '';
+                            const itemText =
+                                typeof item === 'object' && item.content
+                                    ? item.content
+                                    : typeof item === 'string'
+                                        ? item
+                                        : '';
 
                             return (
                                 <li
@@ -150,21 +151,29 @@ const ArticleRenderer: React.FC<ArticleRendererProps> = ({
             )}
 
             {/* Title */}
-            <h1 className="text-5xl font-bold mb-8 text-gray-900 dark:text-white">
+            <h1 className="text-5xl font-bold mb-6 text-gray-900 dark:text-white">
                 {title}
             </h1>
 
-            {/* Metadata */}
-            <div className=" flex gap-4 p-4 border-y border-gray-200 dark:border-gray-800">
-                <div className='flex items-center gap-1'>
-                    <Heart size={14} />
-                    {article?.likesCount}
-                </div>
-                <div className='flex items-center gap-1'>
-                    <Clock size={14} /> {article?.readingTime} min
-                </div>
-                {publishedAt && <span>{publishedAt.toLocaleDateString()}</span>}
-            </div>
+            <AuthorInfo
+                article={article!}
+                variant="full"
+                className="mb-8"
+            />
+
+            {/* Article Actions */}
+            {article && (
+                <ArticleActions
+                    articleId={article._id}
+                    likesCount={article.likesCount}
+                    likes={article.likes}
+                    commentsCount={article.commentsCount}
+                    views={article.views}
+                    readingTime={article.readingTime}
+                    variant="full"
+                    className="py-4 border-y border-gray-200 dark:border-gray-800 mb-8"
+                />
+            )}
 
             {/* Article Content */}
             <div className="prose prose-lg dark:prose-invert max-w-none">

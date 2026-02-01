@@ -34,7 +34,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({
         rounded-full transition-all 
         hover:bg-gray-100 dark:hover:bg-gray-800 
         disabled:opacity-50 disabled:cursor-not-allowed
-        ${isBookmarked ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'}
+        ${isBookmarked ? 'text-gray-600 dark:text-gray-400' : 'text-gray-500 dark:text-gray-400'}
         ${sizeClasses[size]}
         ${className}
     `;

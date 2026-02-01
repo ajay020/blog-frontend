@@ -8,7 +8,6 @@ import {
     selectFollowLoading,
 } from '../features/follow/followSlice';
 import { selectUser } from '../features/auth/authSlice';
-import { UserPlus, UserMinus } from 'lucide-react';
 
 interface FollowButtonProps {
     userId: string;
@@ -49,23 +48,16 @@ const FollowButton: React.FC<FollowButtonProps> = ({ userId, className = '' }) =
         <button
             onClick={handleToggleFollow}
             disabled={isLoading}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed 
-                ${isFollowing
-                    ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500'
-                    : 'text-black hover:text-gray-600'
-                } ${className}`
+            className={`flex items-center
+                 text-gray-900 dark:text-white border-gray-100
+                  hover:border-gray-900 gap-2 px-4 rounded-full 
+                  transition disabled:opacity-50 disabled:cursor-not-allowed 
+                ${className}`
             }
         >
             {
-                isFollowing ? (
-                    <>
-                        Following
-                    </>
-                ) : (
-                    <>
-                        Follow
-                    </>
-                )}
+                isFollowing ? "Following" : "Follow"
+            }
         </button>
     );
 };
