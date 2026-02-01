@@ -117,7 +117,7 @@ const Articles = () => {
                         {/* No Articles */}
                         {articles.length === 0 && !isLoading && (
                             <div className="text-center py-20">
-                                <p className="text-gray-500 dark:text-gray-400 text-lg">
+                                <p className="text-gray-500 dark:text-gray-400 text-2xl">
                                     No articles found
                                 </p>
                             </div>

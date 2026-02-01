@@ -1,11 +1,11 @@
 import { useEffect } from "react";
+import Articles from "./Articles";
 
 const Home = () => {
 
-
   return (
-    <div className="flex bg-white dark:bg-slate-900 justify-center gap-8 mt-8 mx-2 md:mx-8">
-      
+    <div className=" bg-white dark:bg-slate-900">
+      <Articles />
     </div>
   );
 };
