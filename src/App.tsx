@@ -45,12 +45,17 @@ function App() {
                         <Route path="/following" element={<Following />} />
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/create-article" element={<CreateArticle />} />
-                        <Route path="/edit-article/:id" element={<EditArticle />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/settings" element={<Settings />} />
                         <Route path="/notifications" element={<Notifications />} />
                         <Route path="/bookmarks" element={<Bookmarks />} />
                     </Route>
+                </Route>
+
+                <Route element={<ProtectedRoute />}>
+                    {/* Additional Protected Routes outside MainLayout */}
+                    <Route path="/write" element={<CreateArticle />} />
+                    <Route path="/edit-article/:id" element={<EditArticle />} />
                 </Route>
 
                 {/* Auth Routes - no layout */}

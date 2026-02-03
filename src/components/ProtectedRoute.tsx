@@ -1,4 +1,3 @@
-// src/components/ProtectedRoute.tsx
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks';
 import { selectIsAuthenticated, selectAuthLoading } from '../features/auth/authSlice';

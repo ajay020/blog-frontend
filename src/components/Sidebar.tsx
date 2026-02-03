@@ -1,4 +1,3 @@
-// components/Sidebar/Sidebar.tsx
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
@@ -21,7 +20,6 @@ interface SidebarProps {
     isOpen: boolean;
     onClose: () => void;
 }
-
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
@@ -112,10 +110,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                     <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800 lg:hidden">
                         <Link to="/" className="flex items-center gap-2" onClick={onClose}>
                             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                                <span className="text-white font-bold text-lg">M</span>
+                                <span className="text-white font-bold text-lg">B</span>
                             </div>
                             <span className="font-bold text-xl text-gray-900 dark:text-white">
-                                Medium
+                                Blog
                             </span>
                         </Link>
 
@@ -127,27 +125,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                             <X size={20} className="text-gray-600 dark:text-gray-400" />
                         </button>
                     </div>
-
-                    {/* User Info (if logged in) */}
-                    {currentUser && (
-                        <div className="p-4 border-b border-gray-200 dark:border-gray-800">
-                            <div className="flex items-center gap-3">
-                                <img
-                                    src={currentUser.avatar || '/default-avatar.png'}
-                                    alt={currentUser.name}
-                                    className="w-10 h-10 rounded-full object-cover"
-                                />
-                                <div className="flex-1 min-w-0">
-                                    <p className="font-medium text-gray-900 dark:text-white truncate">
-                                        {currentUser.name}
-                                    </p>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                                        @{currentUser.name || currentUser.email?.split('@')[0]}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    )}
 
                     {/* Menu Items */}
                     <nav className="flex-1 overflow-y-auto p-2">

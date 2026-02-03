@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import Articles from "./Articles";
 
 const Home = () => {
