@@ -127,6 +127,7 @@ import { selectIsAuthenticated, logout } from "@/features/auth/authSlice";
 // components/Navbar.tsx
 import React from 'react';
 import { Menu, Search, Bell, PenSquare } from 'lucide-react';
+import ArticleSearch from "./article/ArticleSearch";
 
 interface NavbarProps {
   onMenuClick: () => void;
@@ -154,30 +155,25 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
           {/* Logo (visible on mobile when sidebar is hidden) */}
           <Link
             to="/"
-            className=" flex items-center gap-2"
+            className="flex items-center gap-2"
           >
             <div className="rounded-lg flex items-center justify-center">
-              <span className="text-blue-600 font-bold text-lg">Blog</span>
+              <span className="text-blue-600 font-bold text-sm md:text-lg">Blog</span>
             </div>
           </Link>
 
           {/* Search Bar (Desktop) */}
-          <div className="hidden md:flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-2 w-64">
-            <Search size={18} className="text-gray-500 dark:text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="bg-transparent border-none outline-none text-sm w-full text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-            />
+          <div className="hidden md:flex items-center">
+            <ArticleSearch />
           </div>
         </div>
 
         {/* Right Section */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {/* Search Icon (Mobile) */}
-          <button className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
-            <Search size={20} className="text-gray-700 dark:text-gray-300" />
-          </button>
+          <div className="w-30 rounded-full md:w-50 md:hidden">
+            <ArticleSearch />
+          </div>
 
           {isAuthenticated ? (
             <>
@@ -199,7 +195,7 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
               </Link>
 
               {/* Notifications */}
-              <button className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+              <button className=" hidden md:block relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
                 <Bell size={20} className="text-gray-700 dark:text-gray-300" />
                 {/* Notification Badge */}
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
