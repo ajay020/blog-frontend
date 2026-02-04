@@ -1,4 +1,3 @@
-// src/services/article.service.ts
 import api from './api';
 import {
     Article,

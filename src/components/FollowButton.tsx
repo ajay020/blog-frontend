@@ -49,7 +49,9 @@ const FollowButton: React.FC<FollowButtonProps> = ({ userId, className = '' }) =
             onClick={handleToggleFollow}
             disabled={isLoading}
             className={`flex items-center
-                 text-gray-900 dark:text-white border-gray-100
+                 border border-solid 
+                    py-1 bg-white dark:bg-gray-800
+                 text-gray-900 dark:text-white border-gray-300
                   hover:border-gray-900 gap-2 px-4 rounded-full 
                   transition disabled:opacity-50 disabled:cursor-not-allowed 
                 ${className}`
