@@ -1,14 +1,16 @@
-// src/services/api.ts
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
 // Create axios instance
 const api: AxiosInstance = axios.create({
-    // baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
-    baseURL: 'http://localhost:5000/api',
+    baseURL: import.meta.env.VITE_API_URL,
+    // baseURL: 'http://localhost:5000/api',
     headers: {
         'Content-Type': 'application/json',
     },
 });
+
+console.log(import.meta.env.VITE_API_URL);
+
 
 // Request interceptor - add token to requests
 api.interceptors.request.use(
