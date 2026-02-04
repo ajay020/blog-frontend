@@ -194,11 +194,9 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
                 <PenSquare size={20} className="text-gray-700 dark:text-gray-300" />
               </Link>
 
-              {/* Notifications */}
-              <button className=" hidden md:block relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
-                <Bell size={20} className="text-gray-700 dark:text-gray-300" />
-                {/* Notification Badge */}
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+              {/* Theme */}
+              <button className="md:block relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+                <ThemeToggle />
               </button>
 
               {/* Profile */}

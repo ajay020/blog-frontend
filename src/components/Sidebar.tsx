@@ -19,12 +19,13 @@ import { selectUser } from '@/features/auth/authSlice';
 interface SidebarProps {
     isOpen: boolean;
     onClose: () => void;
-}
+}   
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const currentUser = useAppSelector(selectUser);
+
 
     const menuItems = [
         {
@@ -38,19 +39,19 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             path: '/bookmarks',
             requireAuth: true,
         },
-        {
-            icon: Bell,
-            label: 'Notifications',
-            path: '/notifications',
-            requireAuth: true,
-            badge: 3,
-        },
-        {
-            icon: Users,
-            label: 'Following',
-            path: '/following',
-            requireAuth: true,
-        },
+        // {
+        //     icon: Bell,
+        //     label: 'Notifications',
+        //     path: '/notifications',
+        //     requireAuth: true,
+        //     badge: 3,
+        // },
+        // {
+        //     icon: Users,
+        //     label: 'Following',
+        //     path: '/following',
+        //     requireAuth: true,
+        // },
     ];
 
     const bottomItems = [
@@ -148,13 +149,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                                         >
                                             <Icon size={20} />
                                             <span className="font-medium">{item.label}</span>
-
-                                            {/* Badge */}
-                                            {item.badge && item.badge > 0 && (
-                                                <span className="ml-auto bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                                                    {item.badge > 9 ? '9+' : item.badge}
-                                                </span>
-                                            )}
 
                                             {/* Active indicator */}
                                             {active && (
