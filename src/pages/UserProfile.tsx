@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React,{ useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { getFollowers, getFollowing, selectFollowers, selectFollowing } from '../features/follow/followSlice';
@@ -7,7 +7,7 @@ import articleService from '../services/article.service';
 import FollowButton from '../components/FollowButton';
 import { User } from '../types/auth.types';
 import { Article } from '../types/article.types';
-import { Mail, Globe, Twitter, Github, Linkedin, Users } from 'lucide-react';
+import { Mail, Globe, Twitter, Github, Linkedin } from 'lucide-react';
 
 const UserProfile = () => {
     const { userId } = useParams<{ userId: string }>();
@@ -66,7 +66,7 @@ const UserProfile = () => {
         );
     }
 
-    console.log("USER", user);
+    // console.log("USER", user);
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">

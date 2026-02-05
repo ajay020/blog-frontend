@@ -103,7 +103,7 @@ const Bookmarks: React.FC = () => {
                         {pagination.currentPage >= pagination.totalPages &&
                             bookmarks.length > 0 && (
                                 <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                                    <p>You've reached the end! 🎉</p>
+                                    <p>You&apos;ve reached the end! 🎉</p>
                                     <p className="text-sm mt-2">
                                         {pagination.total} bookmarked articles
                                     </p>
