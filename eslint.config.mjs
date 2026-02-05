@@ -8,7 +8,6 @@ export default [
   ...tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
 
-  //OVERRIDES MUST COME LAST
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
     languageOptions: {
@@ -23,6 +22,7 @@ export default [
       "react/react-in-jsx-scope": "off",
       "react/jsx-uses-react": "off",
       "@typescript-eslint/no-unused-vars": ["warn"],
+      "react/prop-types": "off"
     },
   },
 ];

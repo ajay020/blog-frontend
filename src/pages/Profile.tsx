@@ -324,7 +324,7 @@ const Profile = () => {
                     ) : publishedArticles.length === 0 ? (
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-12 text-center">
                             <p className="text-gray-600 dark:text-gray-400 mb-4">
-                                You haven't published any articles yet.
+                                You haven`&apos;t published any articles yet.
                             </p>
                             <Link
                                 to="/create-article"
