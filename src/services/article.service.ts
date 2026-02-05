@@ -55,12 +55,15 @@ class ArticleService {
     }
 
     // Delete article
-    async deleteArticle(id: string): Promise<{ success: boolean; data: {} }> {
-        const response = await api.delete<{ success: boolean; data: {} }>(
+    async deleteArticle(
+        id: string
+    ): Promise<{ success: boolean }> {
+        const response = await api.delete<{ success: boolean }>(
             `/articles/${id}`
         );
         return response.data;
     }
+
 
     // Like/Unlike article
     async toggleLike(id: string): Promise<LikeResponse> {

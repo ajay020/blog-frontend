@@ -4,6 +4,7 @@ import { OutputData } from '@editorjs/editorjs';
 import { Article } from '@/types/article.types';
 import ArticleActions from './ArticleActions';
 import AuthorInfo from './AuthorInfo';
+import { EditorBlock } from '@/types/editor.types';
 
 interface ArticleRendererProps {
     data: OutputData;
@@ -18,28 +19,29 @@ const ArticleRenderer: React.FC<ArticleRendererProps> = ({
     coverImage,
     article,
 }) => {
-
-    const renderBlock = (block: any) => {
-
+    const renderBlock = (block: EditorBlock) => {
         switch (block.type) {
-            case 'header':
+            case 'header': {
                 const HeaderTag = `h${block.data.level}` as keyof JSX.IntrinsicElements;
                 return (
                     <HeaderTag className="font-bold my-4 text-gray-900 dark:text-white">
                         {block.data.text}
                     </HeaderTag>
                 );
+            }
 
-            case 'paragraph':
+            case 'paragraph': {
                 return (
                     <p
                         className="text-lg leading-relaxed my-4 text-gray-800 dark:text-gray-200"
-                        dangerouslySetInnerHTML={{ __html: block.data.text }}
+                        dangerouslySetInnerHTML={{ __html: block.data.text || '' }}
                     />
                 );
+            }
 
-            case 'list':
+            case 'list': {
                 const ListTag = block.data.style === 'ordered' ? 'ol' : 'ul';
+
                 const listClass =
                     block.data.style === 'ordered'
                         ? 'list-decimal ml-6 my-4 space-y-2 text-gray-800 dark:text-gray-200'
@@ -47,13 +49,11 @@ const ArticleRenderer: React.FC<ArticleRendererProps> = ({
 
                 return (
                     <ListTag className={listClass}>
-                        {block.data.items.map((item: any, index: number) => {
+                        {block.data.items?.map((item, index) => {
                             const itemText =
-                                typeof item === 'object' && item.content
-                                    ? item.content
-                                    : typeof item === 'string'
-                                        ? item
-                                        : '';
+                                typeof item === 'string'
+                                    ? item
+                                    : (item as { content: string }).content ?? '';
 
                             return (
                                 <li
@@ -65,6 +65,7 @@ const ArticleRenderer: React.FC<ArticleRendererProps> = ({
                         })}
                     </ListTag>
                 );
+            }
 
             case 'quote':
                 return (
@@ -102,7 +103,7 @@ const ArticleRenderer: React.FC<ArticleRendererProps> = ({
                 return (
                     <figure className="my-6">
                         <img
-                            src={block.data.file.url}
+                            src={block.data.file?.url || ''}
                             alt={block.data.caption || ''}
                             className="w-full rounded-lg"
                         />
@@ -125,6 +126,7 @@ const ArticleRenderer: React.FC<ArticleRendererProps> = ({
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
                             className="rounded-lg"
+                            title={block.data.caption || 'Embedded content'}
                         />
                         {block.data.caption && (
                             <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">
@@ -155,11 +157,9 @@ const ArticleRenderer: React.FC<ArticleRendererProps> = ({
                 {title}
             </h1>
 
-            <AuthorInfo
-                article={article!}
-                variant="full"
-                className="mb-8"
-            />
+            {article && (
+                <AuthorInfo article={article} variant="full" className="mb-8" />
+            )}
 
             {/* Article Actions */}
             {article && (
@@ -178,7 +178,7 @@ const ArticleRenderer: React.FC<ArticleRendererProps> = ({
             {/* Article Content */}
             <div className="prose prose-lg dark:prose-invert max-w-none">
                 {data.blocks.map((block, index) => (
-                    <div key={index}>{renderBlock(block)}</div>
+                    <div key={index}>{renderBlock(block as EditorBlock)}</div>
                 ))}
             </div>
         </article>

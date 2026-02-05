@@ -34,8 +34,8 @@ class CommentService {
   }
 
   // Delete a comment
-  async deleteComment(commentId: string): Promise<{ success: boolean; data: {} }> {
-    const response = await api.delete<{ success: boolean; data: {} }>(
+  async deleteComment(commentId: string): Promise<{ success: boolean }> {
+    const response = await api.delete<{ success: boolean }>(
       `/comments/${commentId}`
     );
     return response.data;

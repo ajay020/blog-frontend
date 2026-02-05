@@ -1,4 +1,3 @@
-// store/slices/bookmarkSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import bookmarkService from '@/services/bookmark.service';
 import { RootState } from '@/app/store';
@@ -39,9 +38,13 @@ export const toggleBookmark = createAsyncThunk(
                 articleId,
                 isBookmarked: response.data.isBookmarked,
             };
-        } catch (error: any) {
-            return rejectWithValue(error.message);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Failed to toggle bookmark');
         }
+
     }
 );
 
@@ -51,8 +54,11 @@ export const getBookmarks = createAsyncThunk(
         try {
             const response = await bookmarkService.getBookmarks(params);
             return response;
-        } catch (error: any) {
-            return rejectWithValue(error.message);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Failed to fetch bookmarks');
         }
     }
 );
@@ -66,8 +72,11 @@ export const checkIsBookmarked = createAsyncThunk(
                 articleId,
                 isBookmarked: response.data.isBookmarked,
             };
-        } catch (error: any) {
-            return rejectWithValue(error.message);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Failed to check bookmark');
         }
     }
 );
@@ -78,8 +87,11 @@ export const removeBookmark = createAsyncThunk(
         try {
             await bookmarkService.removeBookmark(bookmarkId);
             return bookmarkId;
-        } catch (error: any) {
-            return rejectWithValue(error.message);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Failed to remove bookmark');
         }
     }
 );

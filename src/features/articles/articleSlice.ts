@@ -1,8 +1,6 @@
-// src/features/articles/articleSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import articleService from '../../services/article.service';
 import {
-    Article,
     ArticleState,
     CreateArticleData,
     UpdateArticleData,
@@ -35,8 +33,11 @@ export const getArticles = createAsyncThunk(
         try {
             const response = await articleService.getArticles(params);
             return response;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to fetch articles');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Failed to fetch articles');
         }
     }
 );
@@ -48,8 +49,13 @@ export const getArticle = createAsyncThunk(
         try {
             const response = await articleService.getArticle(slug);
             return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to fetch article');
+        } catch (error: unknown) {
+
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+
+            return rejectWithValue('Failed to fetch article');
         }
     }
 );
@@ -61,8 +67,13 @@ export const getArticleById = createAsyncThunk(
         try {
             const response = await articleService.getArticleById(id);
             return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to fetch article');
+        } catch (error: unknown) {
+
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+
+            return rejectWithValue('Failed to fetch article');
         }
     }
 );
@@ -74,8 +85,11 @@ export const createArticle = createAsyncThunk(
         try {
             const response = await articleService.createArticle(data);
             return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to create article');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Failed to create article');
         }
     }
 );
@@ -90,8 +104,11 @@ export const updateArticle = createAsyncThunk(
         try {
             const response = await articleService.updateArticle(id, data);
             return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to update article');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Failed to update article');
         }
     }
 );
@@ -103,8 +120,11 @@ export const deleteArticle = createAsyncThunk(
         try {
             await articleService.deleteArticle(id);
             return id;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to delete article');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Failed to delete article');
         }
     }
 );
@@ -116,8 +136,11 @@ export const toggleLike = createAsyncThunk(
         try {
             const response = await articleService.toggleLike(id);
             return { id, ...response.data };
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to toggle like');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Failed to toggle like');
         }
     }
 );
@@ -129,8 +152,11 @@ export const getMyArticles = createAsyncThunk(
         try {
             const response = await articleService.getMyArticles();
             return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to fetch your articles');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Failed to fetch your articles');
         }
     }
 );
@@ -142,8 +168,11 @@ export const getFeaturedArticles = createAsyncThunk(
         try {
             const response = await articleService.getFeaturedArticles();
             return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to fetch featured articles');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Failed to fetch featured articles');
         }
     }
 );

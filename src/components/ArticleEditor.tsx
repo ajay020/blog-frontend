@@ -13,9 +13,21 @@ import PublishModal from './PublishModal';
 interface ArticleEditorProps {
     initialData?: OutputData;
     initialTitle?: string;
-    initialCoverImage?: string;
+    initialCoverImage?: string | null;
     onSave?: (data: CreateArticleData) => void;
     isLoading?: boolean;
+}
+
+interface EditorBlock {
+    type: string;
+    data: {
+        text?: string;
+        [key: string]: unknown;
+    };
+}
+
+interface EditorOutputData {
+    blocks: EditorBlock[];
 }
 
 const ArticleEditor: React.FC<ArticleEditorProps> = ({
@@ -28,7 +40,6 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
     const editorRef = useRef<EditorJS | null>(null);
     const [title, setTitle] = useState(initialTitle);
     const [coverImage, setCoverImage] = useState<string | null>(initialCoverImage);
-    const [isSaving, setIsSaving] = useState(false);
     const [showPublishModal, setShowPublishModal] = useState(false);
     const [excerpt, setExcerpt] = useState('');
 
@@ -46,7 +57,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                 data: initialData,
                 tools: {
                     header: {
-                        class: Header as any,
+                        class: Header as unknown as never,
                         config: {
                             placeholder: 'Enter a header',
                             levels: [1, 2, 3, 4],
@@ -109,27 +120,28 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                 editorRef.current = null;
             }
         };
-    }, []);
+    }, [initialData]);
 
     // Generate excerpt from content
     const generateExcerpt = async () => {
         if (!editorRef.current) return '';
 
         try {
-            const outputData = await editorRef.current.save();
+            const outputData = (await editorRef.current.save()) as EditorOutputData;
 
             // Find first paragraph
             const firstParagraph = outputData.blocks.find(
-                (block: any) => block.type === 'paragraph' && block.data.text
+                (block) => block.type === 'paragraph' && block.data.text
             );
 
-            if (firstParagraph) {
+            if (firstParagraph && firstParagraph.data.text) {
                 const text = firstParagraph.data.text.replace(/<[^>]*>/g, '');
                 return text.substring(0, 150) + (text.length > 150 ? '...' : '');
             }
 
             return '';
         } catch (error) {
+            console.error('Failed to generate excerpt:', error);
             return '';
         }
     };

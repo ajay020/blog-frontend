@@ -26,8 +26,13 @@ export const followUser = createAsyncThunk(
         try {
             const response = await followService.followUser(userId);
             return response;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to follow user');
+        } catch (error: unknown) {
+
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+
+            return rejectWithValue('Failed to follow user');
         }
     }
 );
@@ -39,8 +44,13 @@ export const unfollowUser = createAsyncThunk(
         try {
             const response = await followService.unfollowUser(userId);
             return response;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to unfollow user');
+        } catch (error: unknown) {
+
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+
+            return rejectWithValue('Failed to unfollow user');
         }
     }
 );
@@ -52,8 +62,13 @@ export const getFollowers = createAsyncThunk(
         try {
             const response = await followService.getFollowers(userId);
             return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to get followers');
+        } catch (error: unknown) {
+
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+
+            return rejectWithValue('Failed to get followers');
         }
     }
 );
@@ -65,8 +80,13 @@ export const getFollowing = createAsyncThunk(
         try {
             const response = await followService.getFollowing(userId);
             return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to get following');
+        } catch (error: unknown) {
+
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+
+            return rejectWithValue('Failed to get following');
         }
     }
 );
@@ -78,8 +98,13 @@ export const checkIsFollowing = createAsyncThunk(
         try {
             const response = await followService.isFollowing(userId);
             return response.data.isFollowing;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to check follow status');
+        } catch (error: unknown) {
+
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+
+            return rejectWithValue('Failed to check follow status');
         }
     }
 );

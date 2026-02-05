@@ -17,8 +17,12 @@ export const getComments = createAsyncThunk(
         try {
             const response = await commentService.getComments(articleId);
             return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to fetch comments');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+
+            return rejectWithValue('Failed to fetch comments');
         }
     }
 );
@@ -33,8 +37,13 @@ export const createComment = createAsyncThunk(
         try {
             const response = await commentService.createComment(articleId, data);
             return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to create comment');
+        } catch (error: unknown) {
+
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+
+            return rejectWithValue('Failed to create comment');
         }
     }
 );
@@ -49,8 +58,13 @@ export const updateComment = createAsyncThunk(
         try {
             const response = await commentService.updateComment(commentId, content);
             return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to update comment');
+        } catch (error: unknown) {
+
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+
+            return rejectWithValue('Failed to update comment');
         }
     }
 );
@@ -62,8 +76,12 @@ export const deleteComment = createAsyncThunk(
         try {
             await commentService.deleteComment(commentId);
             return commentId;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to delete comment');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+
+            return rejectWithValue('Failed to delete comment');
         }
     }
 );
@@ -75,8 +93,13 @@ export const toggleCommentLike = createAsyncThunk(
         try {
             const response = await commentService.toggleCommentLike(commentId);
             return { commentId, ...response.data };
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to toggle like');
+        } catch (error: unknown) {
+
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+
+            return rejectWithValue('Failed to toggle like');
         }
     }
 );
