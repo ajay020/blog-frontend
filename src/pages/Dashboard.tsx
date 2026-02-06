@@ -7,6 +7,8 @@ import {
     selectMyArticles,
     selectArticlesLoading,
 } from '../features/articles/articleSlice';
+import { Edit3Icon, Eye, Trash } from 'lucide-react';
+import Tooltip from '@/components/Tooltip';
 
 const Dashboard = () => {
     const dispatch = useAppDispatch();
@@ -37,7 +39,7 @@ const Dashboard = () => {
                         className="border rounded-lg p-6 flex justify-between items-center"
                     >
                         <div>
-                            <h2 className="text-2xl font-bold mb-2">{article.title}</h2>
+                            <h2 className="text-gray-900 dark:text-gray-100  text-xl font-bold mb-2">{article.title}</h2>
                             <div className="flex gap-4 text-sm text-gray-600 dark:text-gray-400">
                                 <span>Status: {article.status}</span>
                                 <span>Views: {article.views}</span>
@@ -45,26 +47,35 @@ const Dashboard = () => {
                             </div>
                         </div>
 
-                        <div className="flex gap-2">
-                            <Link
-                                to={`/articles/${article.slug}`}
-                                className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded"
-                            >
-                                View
-                            </Link>
-                            <Link
-                                to={`/edit-article/${article._id}`}
-                                className="px-4 py-2 bg-black text-white rounded"
-                            >
-                                Edit
-                            </Link>
-                            <button
-                                onClick={() => handleDelete(article._id)}
-                                className="px-4 py-2 bg-red-600 text-white rounded"
-                            >
-                                Delete
-                            </button>
+                        <div className="flex items-center justify-start gap-2">
+                            <Tooltip label="View article">
+                                <Link
+                                    to={`/articles/${article.slug}`}
+                                    className=" block w-12 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded  hover:opacity-80 transition"
+                                >
+                                    <Eye size={14} className='dark:text-white' />
+                                </Link>
+                            </Tooltip>
+
+                            <Tooltip label="Edit article">
+                                <Link
+                                    to={`/edit-article/${article._id}`}
+                                    className="block px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded  hover:opacity-80 transition"
+                                >
+                                    <Edit3Icon size={14} className='dark:text-white' />
+                                </Link>
+                            </Tooltip>
+
+                            <Tooltip label="Delete article">
+                                <button
+                                    onClick={() => handleDelete(article._id)}
+                                    className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-600 transition"
+                                >
+                                    <Trash size={14} />
+                                </button>
+                            </Tooltip>
                         </div>
+
                     </div>
                 ))}
             </div>
@@ -73,7 +84,7 @@ const Dashboard = () => {
                 <div className="text-center py-12">
                     <Link
                         to="/create-article"
-                        className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                        className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                     >
                         Write Your First Article
                     </Link>

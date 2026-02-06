@@ -39,13 +39,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             path: '/bookmarks',
             requireAuth: true,
         },
-        // {
-        //     icon: Bell,
-        //     label: 'Notifications',
-        //     path: '/notifications',
-        //     requireAuth: true,
-        //     badge: 3,
-        // },
+        {
+            icon: TrendingUp,
+            label: 'Dashboard',
+            path: '/dashboard',
+            requireAuth: true,
+        },
         // {
         //     icon: Users,
         //     label: 'Following',
