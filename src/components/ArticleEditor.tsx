@@ -9,6 +9,7 @@ import ImageTool from '@editorjs/image';
 import uploadService from '../services/upload.service';
 import { CreateArticleData } from '@/types/article.types';
 import PublishModal from './PublishModal';
+import { Link } from 'react-router-dom';
 
 interface ArticleEditorProps {
     initialData?: OutputData;
@@ -204,7 +205,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                 <header className="border-b border-gray-200 dark:border-gray-800 sticky top-0 bg-white dark:bg-gray-900 z-10">
                     <div className="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
                         <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                            Write Your Story
+                         <Link to="/" className='mr-4 bg-blue-700 px-2 rounded text-white'>B</Link>   Write Your Story
                         </h1>
                         <div className="flex gap-3">
                             <button
