@@ -3,7 +3,6 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { createArticle, selectArticlesLoading } from '../features/articles/articleSlice';
 import ArticleEditor from '../components/ArticleEditor';
 import { CreateArticleData } from '@/types/article.types';
-import React from 'react';
 
 const CreateArticle = () => {
     const dispatch = useAppDispatch();
@@ -11,7 +10,7 @@ const CreateArticle = () => {
     const isLoading = useAppSelector(selectArticlesLoading);
 
     const handleSave = async (articleData: CreateArticleData) => {
-        console.log('Sending article data:', articleData);
+        // console.log('Sending article data:', articleData);
 
         const result = await dispatch(
             createArticle({

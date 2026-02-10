@@ -8,7 +8,7 @@ import {
     selectArticlesLoading,
 } from '../features/articles/articleSlice';
 import { Edit3Icon, Eye, Trash } from 'lucide-react';
-import Tooltip from '@/components/Tooltip';
+import Tooltip from '@/components/common/Tooltip';
 
 const Dashboard = () => {
     const dispatch = useAppDispatch();
