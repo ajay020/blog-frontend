@@ -29,7 +29,9 @@ class ArticleService {
 
     // Get single article by slug
     async getArticle(slug: string): Promise<ArticleResponse> {
-        const response = await api.get<ArticleResponse>(`/articles/${slug}`);
+        const response = await api.get<ArticleResponse>(`/articles/${slug}`, {
+            withCredentials: true
+        });
         return response.data;
     }
 

@@ -15,6 +15,8 @@ const Articles = () => {
     const isLoading = useAppSelector(selectArticlesLoading);
     const pagination = useAppSelector(selectPagination);
 
+    console.log("Articles: ", articles)
+
     // Ref for the observer target
     const observerTarget = useRef<HTMLDivElement>(null);
 
@@ -68,17 +70,17 @@ const Articles = () => {
 
     // Initial load
     useEffect(() => {
-        if (articles.length === 0) {
-            dispatch(getArticles({ page: 1, limit: 10 }));
-        }
-    }, [dispatch, articles.length]);
+        // if (articles.length === 0) {
+        dispatch(getArticles({ page: 1, limit: 10 }));
+        // }
+    }, [dispatch, articles?.length]);
 
     return (
         <div className="min-h-screen bg-white dark:bg-slate-900">
             <div className="max-w-3xl mx-auto px-4 py-12">
 
                 {/* Initial Loading */}
-                {isLoading && articles.length === 0 ? (
+                {isLoading && articles?.length === 0 ? (
                     <div className="flex justify-center items-center py-20">
                         <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
                     </div>
@@ -86,7 +88,7 @@ const Articles = () => {
                     <>
                         {/* Articles List */}
                         <div className="flex flex-col gap-4">
-                            {articles.map((article) => (
+                            {articles?.map((article) => (
                                 <ArticleCard key={article._id} article={article} />
                             ))}
                         </div>
@@ -105,7 +107,7 @@ const Articles = () => {
 
                         {/* End Message */}
                         {pagination.currentPage >= pagination.totalPages &&
-                            articles.length > 0 && (
+                            articles?.length > 0 && (
                                 <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                                     <p>You&apos;ve reached the end! 🎉</p>
                                     <p className="text-sm mt-2">
@@ -115,7 +117,7 @@ const Articles = () => {
                             )}
 
                         {/* No Articles */}
-                        {articles.length === 0 && !isLoading && (
+                        {articles?.length === 0 && !isLoading && (
                             <div className="text-center py-20">
                                 <p className="text-gray-500 dark:text-gray-400 text-2xl">
                                     No articles found

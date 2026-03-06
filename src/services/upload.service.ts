@@ -1,5 +1,3 @@
-// src/services/upload.service.ts
-
 import api from "./api"
 
 interface UploadResponse {

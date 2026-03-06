@@ -215,6 +215,8 @@ const articleSlice = createSlice({
                     const newArticles = action.payload.data.filter(
                         article => !existingIds.has(article._id)
                     );
+                    // console.log("New article", newArticles);
+
                     state.articles = [...state.articles, ...newArticles];
                 }
 
