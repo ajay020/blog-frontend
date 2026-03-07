@@ -19,12 +19,18 @@ export interface User {
     updatedAt: string;
 }
 
+export interface FieldError {
+    field: string;
+    message: string;
+}
+
 export interface AuthState {
     user: User | null;
     token: string | null;
     isAuthenticated: boolean;
     isLoading: boolean;
     error: string | null;
+    fieldErrors: Record<string, string>;
 }
 
 export interface LoginCredentials {

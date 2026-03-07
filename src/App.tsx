@@ -18,6 +18,8 @@ import Home from './pages/Home';
 import MainLayout from './layouts/MainLayout';
 import Following from './pages/Following';
 import Notifications from './pages/Notifications';
+import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
     const dispatch = useAppDispatch();
@@ -65,6 +67,8 @@ function App() {
                 {/* Page not found */}
                 <Route path="*" element={<PageNotFound />} />
             </Routes>
+
+            <ToastContainer position="top-right" autoClose={3000} />
         </BrowserRouter>
     );
 }

@@ -7,8 +7,10 @@ import {
     UpdateProfileData,
     UpdatePasswordData,
     User,
+    FieldError,
 } from '@/types/auth.types';
 import type { RootState } from '@/app/store';
+import { normalizeErrors } from '@/utils/errorUtils';
 
 // Initial state
 const initialState: AuthState = {
@@ -17,6 +19,7 @@ const initialState: AuthState = {
     isAuthenticated: authService.isAuthenticated(),
     isLoading: false,
     error: null,
+    fieldErrors: {}
 };
 
 // Async thunks
@@ -28,11 +31,11 @@ export const register = createAsyncThunk(
         try {
             const response = await authService.register(credentials);
             return response;
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                return rejectWithValue(error.message);
-            }
-            return rejectWithValue('Registration failed');
+        } catch (error: any) {
+            return rejectWithValue({
+                message: error.message || 'Registration failed',
+                errors: error.errors || []
+            });
         }
     }
 );
@@ -44,11 +47,11 @@ export const login = createAsyncThunk(
         try {
             const response = await authService.login(credentials);
             return response;
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                return rejectWithValue(error.message);
-            }
-            return rejectWithValue('Login failed');
+        } catch (error: any) {
+            return rejectWithValue({
+                message: error.message || 'Login failed',
+                errors: error.errors || []
+            });
         }
     }
 );
@@ -142,6 +145,7 @@ const authSlice = createSlice({
             .addCase(register.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;
+                state.fieldErrors = {};
             })
             .addCase(register.fulfilled, (state, action) => {
                 state.isLoading = false;
@@ -152,14 +156,17 @@ const authSlice = createSlice({
             })
             .addCase(register.rejected, (state, action) => {
                 state.isLoading = false;
-                state.error = action.payload as string;
+                const payload = action.payload as { message: string; errors: FieldError[] };
+                state.error = payload?.message || 'Registration failed';
+                state.fieldErrors = normalizeErrors(payload?.errors);
             });
 
         // Login
-        builder
+        builder 
             .addCase(login.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;
+                state.fieldErrors = {};
             })
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoading = false;
@@ -170,7 +177,9 @@ const authSlice = createSlice({
             })
             .addCase(login.rejected, (state, action) => {
                 state.isLoading = false;
-                state.error = action.payload as string;
+                const payload = action.payload as { message: string; errors: FieldError[] };
+                state.error = payload?.message || 'Login failed';
+                state.fieldErrors = normalizeErrors(payload?.errors);
             });
 
         // Get Me

@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { login, clearError, selectAuth } from '../features/auth/authSlice';
 import Input from '@/components/UI/Input';
 import Button from '../components/UI/Button';
+import ErrorBanner from '@/components/common/ErrorBanner';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -14,7 +15,7 @@ const Login = () => {
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { isLoading, error, isAuthenticated } = useAppSelector(selectAuth);
+    const { isLoading, error, fieldErrors, isAuthenticated } = useAppSelector(selectAuth);
 
     // Redirect if already authenticated
     useEffect(() => {
@@ -54,11 +55,7 @@ const Login = () => {
                     Sign In
                 </h1>
 
-                {error && (
-                    <div className="mb-4 rounded-lg bg-red-50 dark:bg-red-900/20 p-4 text-sm text-red-600 dark:text-red-400">
-                        {error}
-                    </div>
-                )}
+                {error && (<ErrorBanner message={error} />)}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <Input
@@ -70,6 +67,7 @@ const Login = () => {
                         placeholder="john@example.com"
                         autoComplete="email"
                         required
+                        error={fieldErrors.email}
                     />
 
                     <Input
@@ -81,6 +79,7 @@ const Login = () => {
                         placeholder="••••••••"
                         autoComplete="current-password"
                         required
+                        error={fieldErrors.password}
                     />
 
                     <Button type="submit" variant="primary" isLoading={isLoading}>
@@ -112,3 +111,4 @@ const Login = () => {
 };
 
 export default Login;
+

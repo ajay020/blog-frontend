@@ -1,10 +1,11 @@
-import { useEffect, useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { RootState } from "../app/store";
-import FormInput from "@/components/UI/FormInput";
 import { register, selectAuth } from "@/features/auth/authSlice";
+import ErrorBanner from "@/components/common/ErrorBanner";
+import Button from "@/components/UI/Button";
+import Input from "@/components/UI/Input";
 
 const fields = [
   {
@@ -51,11 +52,8 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   });
-
   const { name, email, password, confirmPassword } = formData;
-
-  const { isLoading, error } = useAppSelector(selectAuth);
-
+  const { isLoading, error, fieldErrors } = useAppSelector(selectAuth);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -66,12 +64,12 @@ const Register = () => {
     e.preventDefault();
 
     if (!name || !email || !password || !confirmPassword) {
-      toast.error("Please fill all fields");
+      toast.error("Please fill all the fields");
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error("Passwords didn't match");
       return;
     }
 
@@ -94,33 +92,23 @@ const Register = () => {
         <h1 className="mb-6 text-center text-2xl font-bold text-gray-800 dark:text-white">
           Create an account
         </h1>
-
-
-        {error && (
-          <div className="mb-4 rounded-lg bg-red-50 dark:bg-red-900/20 p-4 text-sm text-red-600 dark:text-red-400">
-            {error}
-          </div>
-        )}
+        {error && <ErrorBanner message={error} />}
 
         <form onSubmit={submitHandler} className="space-y-4">
           {fields.map((field) => (
-            <FormInput
+            <Input
               key={field.name}
               {...field}
               value={formData[field.name]}
               onChange={onChange}
+              required
+              error={fieldErrors[field.name]}
             />
           ))}
 
-          <button
-            type="submit"
-            disabled={status === "loading"}
-            className="w-full rounded-lg bg-blue-600 py-2 text-sm font-semibold text-white
-                       transition hover:bg-blue-700
-                       disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {isLoading ? "Creating account..." : "Register"}
-          </button>
+          <Button type="submit" variant="primary" isLoading={isLoading}>
+            Register
+          </Button>
 
           <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
             Already have an account?{" "}

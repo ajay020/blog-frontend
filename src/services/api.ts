@@ -9,9 +9,6 @@ const api: AxiosInstance = axios.create({
     },
 });
 
-console.log(import.meta.env.VITE_API_URL);
-
-
 // Request interceptor - add token to requests
 api.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
@@ -30,19 +27,30 @@ api.interceptors.request.use(
 
 // Response interceptor - handle errors globally
 api.interceptors.response.use(
-    (response) => response,
-    (error: AxiosError<{ error: string }>) => {
+    (response) => {
+        console.log("API RESPONSE: ", response);
+        return response;
+    },
+    (error: AxiosError<any>) => {
+        const status = error.response?.status;
+        const data = error.response?.data;
+
         // Handle 401 Unauthorized
-        if (error.response?.status === 401) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.href = '/login';
-        }
+        // if (status === 401) {
+        //     localStorage.removeItem('token');
+        //     localStorage.removeItem('user');
+        //     window.location.href = '/login';
+        // }
 
-        // Extract error message
-        const errorMessage = error.response?.data?.error || 'An error occurred';
+        console.log("API_ERROR: ", error.response?.data)
 
-        return Promise.reject(new Error(errorMessage));
+        // Capture both general error and field-level errors
+        const formattedError = {
+            message: data?.message || 'An error occurred',
+            errors: data?.errors || []
+        };
+
+        return Promise.reject(formattedError);
     }
 );
 
