@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { createArticle, selectArticlesLoading } from '../features/articles/articleSlice';
-import ArticleEditor from '../components/ArticleEditor';
+import ArticleEditor from '@/components/article/ArticleEditor';
 import { CreateArticleData } from '@/types/article.types';
 
 const CreateArticle = () => {
