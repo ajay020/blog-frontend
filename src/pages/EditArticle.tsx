@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
     getArticleById,
     updateArticle,
     selectCurrentArticle,
     selectArticlesLoading,
     clearCurrentArticle,
-} from '../features/articles/articleSlice';
-import ArticleEditor from '../components/ArticleEditor';
-import { CreateArticleData } from '../types/article.types';
+} from '@/features/articles/articleSlice';
+import ArticleEditor from '@/components/article/ArticleEditor';
+import { CreateArticleData } from '@/types/article.types';
 
 const EditArticle = () => {
     const { id } = useParams<{ id: string }>();

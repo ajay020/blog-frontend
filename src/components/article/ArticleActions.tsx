@@ -1,7 +1,7 @@
 import React from 'react';
 import { Heart, MessageCircle, Eye, Clock } from 'lucide-react';
-import LikeButton from './LikeButton';
-import BookmarkButton from './BookMarkButton';
+import LikeButton from '@/components/LikeButton';
+import BookmarkButton from '@/components/BookmarkButton';
 
 interface ArticleActionsProps {
     articleId: string;

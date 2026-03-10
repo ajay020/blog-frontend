@@ -3,7 +3,7 @@ import { JSX } from 'react';
 import { OutputData } from '@editorjs/editorjs';
 import { Article } from '@/types/article.types';
 import ArticleActions from './ArticleActions';
-import AuthorInfo from './AuthorInfo';
+import AuthorInfo from '../AuthorInfo';
 import { EditorBlock } from '@/types/editor.types';
 
 interface ArticleRendererProps {

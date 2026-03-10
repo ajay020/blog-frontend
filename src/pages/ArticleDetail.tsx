@@ -7,12 +7,12 @@ import {
     selectArticlesLoading,
     clearCurrentArticle,
 } from '../features/articles/articleSlice';
-import ArticleRenderer from '../components/ArtileRenderer';
+import ArticleRenderer from '../components/article/ArtileRenderer';
 import FollowButton from '../components/FollowButton';
 import { selectUser } from '../features/auth/authSlice';
 import { Link } from 'react-router-dom';
-import CommentsSection from '@/components/CommentsSection';
-import ArticleActions from '@/components/ArticleActions';
+import CommentsSection from '@/components/comment/CommentsSection';
+import ArticleActions from '@/components/article/ArticleActions';
 
 const ArticleDetail = () => {
     const { slug } = useParams<{ slug: string }>();

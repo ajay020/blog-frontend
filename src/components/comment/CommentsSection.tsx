@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
     getComments,
     createComment,
@@ -12,9 +12,9 @@ import {
     optimisticUpdateComment,
     revertComment,
     optimisticDeleteComment,
-} from '../features/comments/commentSlice';
-import { selectUser } from '../features/auth/authSlice';
-import { Comment } from '../types/comment.types';
+} from '../../features/comments/commentSlice';
+import { selectUser } from '../../features/auth/authSlice';
+import { Comment } from '../../types/comment.types';
 import { MessageCircle, Heart, Edit2, Trash2, Reply } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
