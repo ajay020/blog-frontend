@@ -82,7 +82,7 @@ const Register = () => {
     );
 
     if (register.fulfilled.match(result)) {
-      navigate('/dashboard');
+      navigate('/');
     }
   };
 
