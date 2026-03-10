@@ -1,4 +1,3 @@
-// src/components/ui/Input.tsx
 import React from 'react';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -22,8 +21,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                     id={name}
                     name={name}
                     className={`w-full rounded-lg border px-3 py-2 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 transition-colors ${error
-                            ? 'border-red-500 dark:border-red-500'
-                            : 'border-gray-300 dark:border-gray-600'
+                        ? 'border-red-500 dark:border-red-500'
+                        : 'border-gray-300 dark:border-gray-600'
                         } ${className}`}
                     {...props}
                 />
