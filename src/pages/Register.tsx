@@ -1,39 +1,12 @@
-import { useState, ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { register, selectAuth } from "@/features/auth/authSlice";
 import ErrorBanner from "@/components/common/ErrorBanner";
 import Button from "@/components/UI/Button";
-import Input from "@/components/UI/Input";
-
-const fields = [
-  {
-    label: "Name",
-    name: "name",
-    type: "text",
-    placeholder: "John Doe",
-  },
-  {
-    label: "Email",
-    name: "email",
-    type: "email",
-    placeholder: "john@example.com",
-  },
-  {
-    label: "Password",
-    name: "password",
-    type: "password",
-    placeholder: "••••••••",
-  },
-  {
-    label: "Confirm Password",
-    name: "confirmPassword",
-    type: "password",
-    placeholder: "••••••••",
-  },
-] as const;
-
+import { useForm, FormProvider } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerSchema } from "@/schemas/authSchemas";
+import FormInput from "@/components/form/form-input";
 
 interface RegisterFormData {
   name: string;
@@ -46,45 +19,26 @@ const Register = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState<RegisterFormData>({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+  const { isLoading, error: serverError } = useAppSelector(selectAuth);
+
+  const methods = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
   });
-  const { name, email, password, confirmPassword } = formData;
-  const { isLoading, error, fieldErrors } = useAppSelector(selectAuth);
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!name || !email || !password || !confirmPassword) {
-      toast.error("Please fill all the fields");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      toast.error("Passwords didn't match");
-      return;
-    }
-
+  const submitHandler = async (data: RegisterFormData) => {
     const result = await dispatch(
       register({
-        name,
-        email,
-        password,
+        name: data.name,
+        email: data.email,
+        password: data.password,
       })
     );
 
     if (register.fulfilled.match(result)) {
-      navigate('/');
+      navigate("/");
     }
   };
+
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-slate-900 px-4">
@@ -92,35 +46,54 @@ const Register = () => {
         <h1 className="mb-6 text-center text-2xl font-bold text-gray-800 dark:text-white">
           Create an account
         </h1>
-        {error && <ErrorBanner message={error} />}
 
-        <form onSubmit={submitHandler} className="space-y-4">
-          {fields.map((field) => (
-            <Input
-              key={field.name}
-              {...field}
-              value={formData[field.name]}
-              onChange={onChange}
-              required
-              error={fieldErrors[field.name]}
+        {serverError && <ErrorBanner message={serverError} />}
+
+        <FormProvider {...methods}>
+          <form
+            onSubmit={methods.handleSubmit(submitHandler)}
+            className="space-y-4"
+          >
+            <FormInput name="name" label="Name" placeholder="Jhon Doe" />
+
+            <FormInput name="email" label="Email" placeholder="jhon@gmail.com" />
+
+            <FormInput
+              name="password"
+              label="Password"
+              type="password"
+              placeholder="....."
             />
-          ))}
 
-          <Button type="submit" variant="primary" isLoading={isLoading}>
-            Register
-          </Button>
+            <FormInput
+              name="confirmPassword"
+              label="Confirm Password"
+              type="password"
+              placeholder="....."
 
-          <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
-            Already have an account?{" "}
-            <Link
-              to="/login"
-              className="font-medium text-blue-600 hover:text-blue-700
-                         dark:text-blue-400 dark:hover:text-blue-300"
+            />
+
+            <Button
+              disabled={!methods.formState.isValid}
+              type="submit"
+              variant="primary"
+              isLoading={isLoading}
             >
-              Login
-            </Link>
-          </p>
-        </form>
+              Register
+            </Button>
+
+            <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="font-medium text-blue-600 hover:text-blue-700
+                         dark:text-blue-400 dark:hover:text-blue-300"
+              >
+                Login
+              </Link>
+            </p>
+          </form>
+        </FormProvider>
       </div>
     </div>
   );

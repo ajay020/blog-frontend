@@ -12,7 +12,6 @@ import {
 import type { RootState } from '@/app/store';
 import { normalizeErrors } from '@/utils/errorUtils';
 
-// Initial state
 const initialState: AuthState = {
     user: authService.getUserFromStorage(),
     token: authService.getTokenFromStorage(),
@@ -162,7 +161,7 @@ const authSlice = createSlice({
             });
 
         // Login
-        builder 
+        builder
             .addCase(login.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;

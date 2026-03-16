@@ -1,28 +1,30 @@
-// src/pages/Login.tsx
-import { useState, FormEvent, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { login, clearError, selectAuth } from '../features/auth/authSlice';
-import Input from '@/components/UI/Input';
 import Button from '../components/UI/Button';
 import ErrorBanner from '@/components/common/ErrorBanner';
+import FormInput from '@/components/form/form-input';
+import { FormProvider, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { LoginFormData, loginSchema } from '@/schemas/authSchemas';
 
 const Login = () => {
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-    });
-
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { isLoading, error, fieldErrors, isAuthenticated } = useAppSelector(selectAuth);
+    const { isLoading, error, isAuthenticated } = useAppSelector(selectAuth);
 
-    // Redirect if already authenticated
+    const methods = useForm<LoginFormData>({
+        resolver: zodResolver(loginSchema),
+    });
+    const { handleSubmit, reset } = methods;
+
     useEffect(() => {
         if (isAuthenticated) {
-            navigate('/dashboard');
+            reset();
+            navigate('/');
         }
-    }, [isAuthenticated, navigate]);
+    }, [isAuthenticated, navigate, reset]);
 
     // Clear error when component unmounts
     useEffect(() => {
@@ -31,21 +33,10 @@ const Login = () => {
         };
     }, [dispatch]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-    };
-
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        const result = await dispatch(login(formData));
-
-        if (login.fulfilled.match(result)) {
-            navigate('/');
-        }
+    const submitHandler = async (data: LoginFormData) => {
+        await dispatch(
+            login(data)
+        );
     };
 
     return (
@@ -57,35 +48,32 @@ const Login = () => {
 
                 {error && (<ErrorBanner message={error} />)}
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <Input
-                        label="Email"
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="john@example.com"
-                        autoComplete="email"
-                        required
-                        error={fieldErrors.email}
-                    />
+                <FormProvider {...methods}>
+                    <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
+                        <FormInput
+                            label="Email"
+                            type="email"
+                            name="email"
+                            placeholder="john@example.com"
+                        />
 
-                    <Input
-                        label="Password"
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder="••••••••"
-                        autoComplete="current-password"
-                        required
-                        error={fieldErrors.password}
-                    />
+                        <FormInput
+                            label="Password"
+                            type="password"
+                            name="password"
+                            placeholder="••••••••"
+                        />
 
-                    <Button type="submit" variant="primary" isLoading={isLoading}>
-                        Sign In
-                    </Button>
-                </form>
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            isLoading={isLoading}
+                            disabled={isLoading}
+                        >
+                            Sign In
+                        </Button>
+                    </form>
+                </FormProvider>
 
                 <div className="mt-4 text-center">
                     <Link
@@ -97,7 +85,7 @@ const Login = () => {
                 </div>
 
                 <div className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
-                    Don&apos;t have an account?{' '}
+                    Don&apos;t have an account?
                     <Link
                         to="/register"
                         className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
