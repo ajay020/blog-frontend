@@ -11,9 +11,11 @@ import {
 } from '@/types/auth.types';
 import type { RootState } from '@/app/store';
 import { normalizeErrors } from '@/utils/errorUtils';
+import { ApiError } from '@/utils/apiError';
+import { handleApiError } from '@/utils/handleApiError';
 
 const initialState: AuthState = {
-    user: authService.getUserFromStorage(),
+    user: null,
     token: authService.getTokenFromStorage(),
     isAuthenticated: authService.isAuthenticated(),
     isLoading: false,
@@ -30,11 +32,8 @@ export const register = createAsyncThunk(
         try {
             const response = await authService.register(credentials);
             return response;
-        } catch (error: any) {
-            return rejectWithValue({
-                message: error.message || 'Registration failed',
-                errors: error.errors || []
-            });
+        } catch (error) {
+            return rejectWithValue(handleApiError(error));
         }
     }
 );
@@ -46,11 +45,8 @@ export const login = createAsyncThunk(
         try {
             const response = await authService.login(credentials);
             return response;
-        } catch (error: any) {
-            return rejectWithValue({
-                message: error.message || 'Login failed',
-                errors: error.errors || []
-            });
+        } catch (error: unknown) {
+            return rejectWithValue(handleApiError(error));
         }
     }
 );
@@ -63,10 +59,7 @@ export const getMe = createAsyncThunk(
             const response = await authService.getMe();
             return response.data;
         } catch (error: unknown) {
-            if (error instanceof Error) {
-                return rejectWithValue(error.message);
-            }
-            return rejectWithValue('Failed to fetch user');
+            return rejectWithValue(handleApiError(error));
         }
     }
 );
@@ -79,10 +72,7 @@ export const updateProfile = createAsyncThunk(
             const response = await authService.updateProfile(data);
             return response.data;
         } catch (error: unknown) {
-            if (error instanceof Error) {
-                return rejectWithValue(error.message);
-            }
-            return rejectWithValue('Failed to update profile');
+            return rejectWithValue(handleApiError(error));
         }
     }
 );
@@ -95,10 +85,7 @@ export const updatePassword = createAsyncThunk(
             const response = await authService.updatePassword(data);
             return response;
         } catch (error: unknown) {
-            if (error instanceof Error) {
-                return rejectWithValue(error.message);
-            }
-            return rejectWithValue('Failed to update password');
+            return rejectWithValue(handleApiError(error));
         }
     }
 );
@@ -111,25 +98,17 @@ export const deleteAccount = createAsyncThunk(
             const response = await authService.deleteAccount();
             return response;
         } catch (error: unknown) {
-            if (error instanceof Error) {
-                return rejectWithValue(error.message);
-            }
-            return rejectWithValue('Failed to delete account');
+            return rejectWithValue(handleApiError(error));
         }
     }
 );
 
-// Logout user (synchronous)
-export const logout = createAsyncThunk('auth/logout', async () => {
-    authService.logout();
-});
 
 // Auth slice
 const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        // Clear error
         clearError: (state) => {
             state.error = null;
         },
@@ -137,6 +116,13 @@ const authSlice = createSlice({
         setUser: (state, action: PayloadAction<User>) => {
             state.user = action.payload;
         },
+        logout: (state) => {
+            authService.logout();
+            state.user = null;
+            state.token = null;
+            state.isAuthenticated = false;
+            state.error = null;
+        }
     },
     extraReducers: (builder) => {
         // Register
@@ -246,20 +232,11 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload as string;
             });
-
-        // Logout
-        builder.addCase(logout.fulfilled, (state) => {
-            state.user = null;
-            state.token = null;
-            state.isAuthenticated = false;
-            state.isLoading = false;
-            state.error = null;
-        });
     },
 });
 
 // Actions
-export const { clearError, setUser } = authSlice.actions;
+export const { clearError, setUser, logout } = authSlice.actions;
 
 // Selectors
 export const selectAuth = (state: RootState) => state.auth;

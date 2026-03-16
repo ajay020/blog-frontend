@@ -1,3 +1,4 @@
+import { ApiError } from '@/utils/apiError';
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
 // Create axios instance
@@ -28,29 +29,35 @@ api.interceptors.request.use(
 // Response interceptor - handle errors globally
 api.interceptors.response.use(
     (response) => {
-        console.log("API RESPONSE: ", response);
         return response;
     },
     (error: AxiosError<any>) => {
-        const status = error.response?.status;
-        const data = error.response?.data;
+        if (error.response) {
+            const { status, data } = error.response;
 
-        // Handle 401 Unauthorized
-        // if (status === 401) {
-        //     localStorage.removeItem('token');
-        //     localStorage.removeItem('user');
-        //     window.location.href = '/login';
-        // }
+            const message = data?.message || "Request failed";
+            const errors = data?.errors || [];
 
-        console.log("API_ERROR: ", error.response?.data)
+            if (status === 401) {
+                localStorage.removeItem("token");
+            }
 
-        // Capture both general error and field-level errors
-        const formattedError = {
-            message: data?.message || 'An error occurred',
-            errors: data?.errors || []
-        };
+            return Promise.reject(
+                new ApiError(message, status, errors)
+            );
+        }
 
-        return Promise.reject(formattedError);
+        // Network error
+        if (error.request) {
+            return Promise.reject(
+                new ApiError("Network error. Please check connection.")
+            );
+        }
+
+        // Unknown error
+        return Promise.reject(
+            new ApiError(error.message)
+        );
     }
 );
 
