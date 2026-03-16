@@ -35,7 +35,6 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                {/* Main Layout Routes */}
                 <Route element={<MainLayout />}>
                     {/* Public Routes */}
                     <Route path="/" element={<Home />} />
@@ -55,16 +54,13 @@ function App() {
                 </Route>
 
                 <Route element={<ProtectedRoute />}>
-                    {/* Additional Protected Routes outside MainLayout */}
                     <Route path="/write" element={<CreateArticle />} />
                     <Route path="/edit-article/:id" element={<EditArticle />} />
                 </Route>
 
-                {/* Auth Routes - no layout */}
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
 
-                {/* Page not found */}
                 <Route path="*" element={<PageNotFound />} />
             </Routes>
 
