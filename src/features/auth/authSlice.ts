@@ -11,7 +11,6 @@ import {
 } from '@/types/auth.types';
 import type { RootState } from '@/app/store';
 import { normalizeErrors } from '@/utils/errorUtils';
-import { ApiError } from '@/utils/apiError';
 import { handleApiError } from '@/utils/handleApiError';
 
 const initialState: AuthState = {
@@ -103,8 +102,6 @@ export const deleteAccount = createAsyncThunk(
     }
 );
 
-
-// Auth slice
 const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -112,7 +109,6 @@ const authSlice = createSlice({
         clearError: (state) => {
             state.error = null;
         },
-        // Set user (useful for updating user data from other slices)
         setUser: (state, action: PayloadAction<User>) => {
             state.user = action.payload;
         },
