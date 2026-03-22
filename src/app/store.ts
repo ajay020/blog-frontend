@@ -5,6 +5,7 @@ import articleReducer from '@/features/articles/articleSlice'
 import followReducer from "@/features/follow/followSlice"
 import commentReducer from '@/features/comments/commentSlice';
 import bookmarkReducer from "@/features/bookmark/bookmarkSlice";
+import { rtkApi } from '@/services/api/rtkApi';
 
 export const store = configureStore({
   reducer: {
@@ -13,8 +14,12 @@ export const store = configureStore({
     articles: articleReducer,
     follow: followReducer,
     comments: commentReducer,
-    bookmarks: bookmarkReducer
+    bookmarks: bookmarkReducer,
+
+    [rtkApi.reducerPath]: rtkApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(rtkApi.middleware),
 });
 
 

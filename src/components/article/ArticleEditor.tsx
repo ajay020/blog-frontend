@@ -218,7 +218,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                             <button
                                 onClick={handlePublishClick}
                                 disabled={isLoading}
-                                className="px-4 py-2 text-sm bg-green-600 text-white rounded-full hover:bg-green-700 transition disabled:opacity-50"
+                                className="px-4 py-2 text-sm bg-blue-600 text-white rounded-full hover:bg-blue-700 transition disabled:opacity-50"
                             >
                                 Publish
                             </button>

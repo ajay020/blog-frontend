@@ -15,8 +15,6 @@ const Articles = () => {
     const isLoading = useAppSelector(selectArticlesLoading);
     const pagination = useAppSelector(selectPagination);
 
-    console.log("Articles: ", articles)
-
     // Ref for the observer target
     const observerTarget = useRef<HTMLDivElement>(null);
 
@@ -70,9 +68,9 @@ const Articles = () => {
 
     // Initial load
     useEffect(() => {
-        // if (articles.length === 0) {
-        dispatch(getArticles({ page: 1, limit: 10 }));
-        // }
+        if (articles.length === 0) {
+            dispatch(getArticles({ page: 1, limit: 10 }));
+        }
     }, [dispatch, articles?.length]);
 
     return (

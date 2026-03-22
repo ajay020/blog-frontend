@@ -1,35 +1,21 @@
-import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
-import {
-    getArticle,
-    selectCurrentArticle,
-    selectArticlesLoading,
-    clearCurrentArticle,
-} from '../features/articles/articleSlice';
+import { useAppSelector } from '../app/hooks';
 import ArticleRenderer from '../components/article/ArtileRenderer';
 import FollowButton from '../components/FollowButton';
 import { selectUser } from '../features/auth/authSlice';
 import { Link } from 'react-router-dom';
 import CommentsSection from '@/components/comment/CommentsSection';
 import ArticleActions from '@/components/article/ArticleActions';
+import { useGetArticleQuery } from '@/services/api/artilceApi';
 
 const ArticleDetail = () => {
     const { slug } = useParams<{ slug: string }>();
-    const dispatch = useAppDispatch();
-    const article = useAppSelector(selectCurrentArticle);
-    const isLoading = useAppSelector(selectArticlesLoading);
     const currentUser = useAppSelector(selectUser);
 
-    useEffect(() => {
-        if (slug) {
-            dispatch(getArticle(slug));
-        }
-
-        return () => {
-            dispatch(clearCurrentArticle());
-        };
-    }, [slug, dispatch]);
+    const { data, isLoading, error } = useGetArticleQuery(slug!, {
+        skip: !slug
+    });
+    const article = data?.data;
 
     if (isLoading) {
         return (
@@ -39,10 +25,12 @@ const ArticleDetail = () => {
         );
     }
 
-    if (!article) {
+    if (error || !article) {
         return (
             <div className="flex h-screen items-center justify-center">
-                <p className="text-gray-600 dark:text-gray-400">Article not found</p>
+                <p className="text-gray-600 dark:text-gray-400">
+                    Failed to load article
+                </p>
             </div>
         );
     }
