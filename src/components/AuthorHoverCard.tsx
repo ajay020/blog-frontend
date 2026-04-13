@@ -26,7 +26,9 @@ const AuthorHoverCard: React.FC<AuthorHoverCardProps> = ({ author, children }) =
 
             <HoverCard.Portal>
                 <HoverCard.Content
-                    className="z-50 w-80 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 shadow-xl animate-in fade-in-0 zoom-in-95"
+                    className="z-50 w-80 rounded-lg border border-gray-200
+                     dark:border-gray-700 bg-white dark:bg-gray-800 p-5 
+                     shadow-xl animate-in fade-in-0 zoom-in-95"
                     sideOffset={5}
                 >
                     <div className="flex flex-col gap-4">
@@ -39,10 +41,14 @@ const AuthorHoverCard: React.FC<AuthorHoverCardProps> = ({ author, children }) =
                                 <img
                                     src={author.avatar || '/default-avatar.png'}
                                     alt={author.name}
-                                    className="w-12 h-12 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600 group-hover:border-blue-500 transition-colors"
+                                    className="w-12 h-12 rounded-full object-cover border-2
+                                     border-gray-200 dark:border-gray-600 group-hover:border-blue-500
+                                      transition-colors"
                                 />
                                 <div>
-                                    <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                                    <h3 className="font-semibold text-gray-900 dark:text-white
+                                     group-hover:text-blue-600 dark:group-hover:text-blue-400 
+                                     transition-colors">
                                         {author.name}
                                     </h3>
                                     <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -65,7 +71,9 @@ const AuthorHoverCard: React.FC<AuthorHoverCardProps> = ({ author, children }) =
                         )}
 
                         {/* Stats */}
-                        <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-100 dark:border-gray-700">
+                        <div className="flex items-center gap-4 text-sm text-gray-500
+                         dark:text-gray-400 pt-2 border-t border-gray-100
+                          dark:border-gray-700">
                             <span>{author.articlesCount || 0} articles</span>
                             <span>•</span>
                             <span>{author.followersCount || 0} followers</span>

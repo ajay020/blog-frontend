@@ -1,17 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
     Home,
     Bookmark,
     User,
-    Users,
-    FileText,
     Settings,
-    Bell,
     TrendingUp,
-    Hash,
     X,
-    Book,
 } from 'lucide-react';
 import { useAppSelector } from '@/app/hooks';
 import { selectUser } from '@/features/auth/authSlice';
@@ -19,7 +14,7 @@ import { selectUser } from '@/features/auth/authSlice';
 interface SidebarProps {
     isOpen: boolean;
     onClose: () => void;
-}   
+}
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
@@ -44,29 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             label: 'Dashboard',
             path: '/dashboard',
             requireAuth: true,
-        },
-        // {
-        //     icon: Users,
-        //     label: 'Following',
-        //     path: '/following',
-        //     requireAuth: true,
-        // },
-    ];
-
-    const bottomItems = [
-        {
-            icon: User,
-            label: 'Profile',
-            path: currentUser ? `/users/${currentUser._id}` : '/login',
-            requireAuth: true,
-        },
-        {
-            icon: Settings,
-            label: 'Settings',
-            path: '/settings',
-            requireAuth: true,
-        },
-    ];
+        }];
 
     const handleNavigation = (path: string) => {
         navigate(path);
@@ -81,9 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     const filteredMenuItems = menuItems.filter(
         (item) => !item.requireAuth || currentUser
     );
-    const filteredBottomItems = bottomItems.filter(
-        (item) => !item.requireAuth || currentUser
-    );
+
 
     return (
         <>
@@ -95,7 +66,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 />
             )}
 
-            {/* Sidebar - z-40 (below navbar which is z-50) */}
+            {/* Sidebar */}
             <aside
                 className={`
                     fixed top-16 left-0 bottom-0 w-64 bg-white dark:bg-gray-900 
@@ -162,31 +133,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
                     {/* Bottom Items */}
                     <div className="p-2 border-t border-gray-200 dark:border-gray-800">
-                        <ul className="space-y-1">
-                            {filteredBottomItems.map((item) => {
-                                const Icon = item.icon;
-                                const active = isActive(item.path);
 
-                                return (
-                                    <li key={item.path}>
-                                        <button
-                                            onClick={() => handleNavigation(item.path)}
-                                            className={`
-                                                w-full flex items-center gap-3 px-3 py-2.5 rounded-lg 
-                                                transition-colors
-                                                ${active
-                                                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                                                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                                                }
-                                            `}
-                                        >
-                                            <Icon size={20} />
-                                            <span className="font-medium">{item.label}</span>
-                                        </button>
-                                    </li>
-                                );
-                            })}
-                        </ul>
                     </div>
                 </div>
             </aside>

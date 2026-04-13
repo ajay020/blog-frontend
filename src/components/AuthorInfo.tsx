@@ -20,7 +20,6 @@ function AuthorInfo({
     const publishedAt = format(new Date(article.createdAt), 'MMM dd, yyyy');
     const author = article.author;
 
-    // Author link content
     const AuthorLink = (
         <Link
             className="flex gap-2 items-center group"
@@ -37,7 +36,6 @@ function AuthorInfo({
         </Link>
     );
 
-    // Wrap with hover card if enabled
     const AuthorContent = showHoverCard ? (
         <AuthorHoverCard author={author}>
             {AuthorLink}

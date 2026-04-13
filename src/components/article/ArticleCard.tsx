@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Heart, Clock } from 'lucide-react';
 import { Article } from '@/types/article.types';
 import AuthorInfo from '../AuthorInfo';
-import BookmarkButton from '../BookMarkButton';
+import BookmarkButton from '../BookmarkButton';
 
 interface ArticleCardProps {
     article: Article;
@@ -14,7 +14,6 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
 
     return (
         <div className="px-4 py-4 block border border-gray-400 dark:border-gray-700 rounded-lg hover:shadow-lg transition-shadow">
-            {/* Author Info */}
             <AuthorInfo
                 article={article}
                 variant="minimal"
@@ -70,7 +69,6 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
                     </div>
                 </div>
 
-                {/* Bookmark Button */}
                 <BookmarkButton articleId={article._id} variant="icon" size="sm" />
             </div>
         </div>

@@ -15,7 +15,6 @@ const Articles = () => {
     const isLoading = useAppSelector(selectArticlesLoading);
     const pagination = useAppSelector(selectPagination);
 
-    // Ref for the observer target
     const observerTarget = useRef<HTMLDivElement>(null);
 
     // Track if we're currently fetching
