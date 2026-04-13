@@ -16,12 +16,10 @@ const MainLayout: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-white dark:bg-gray-900">
-            {/* Navbar - stays on top with z-50 */}
             <Navbar onMenuClick={toggleSidebar} />
 
             {/* Main Container - below navbar */}
             <div className="flex pt-16">
-                {/* Sidebar - below navbar with z-30 */}
                 <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
 
                 {/* Main Content */}

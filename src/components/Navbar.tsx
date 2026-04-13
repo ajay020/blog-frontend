@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
-import { RootState } from "../app/store";
 import ThemeToggle from "./ThemeToggle";
 import { selectIsAuthenticated, logout } from "@/features/auth/authSlice";
 
@@ -15,7 +14,6 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  const { user } = useAppSelector((state: RootState) => state.auth);
 
   return (
     <nav className="fixed top-0 left-0 right-0 h-16
@@ -27,7 +25,7 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
           {/* Menu Button (Mobile) */}
           <button
             onClick={onMenuClick}
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100
+            className=" p-2 rounded-lg hover:bg-gray-100
              dark:hover:bg-gray-800 transition-colors"
             aria-label="Toggle menu"
           >
