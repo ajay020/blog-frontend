@@ -73,8 +73,8 @@ const Articles = () => {
     }, [dispatch, articles?.length]);
 
     return (
-        <div className="min-h-screen bg-white dark:bg-slate-900">
-            <div className="max-w-3xl mx-auto px-4 py-12">
+        <div className=" flex justify-center min-h-screen dark:bg-slate-900">
+            <div className="max-w-2xl  mx-auto px-4 py-12">
 
                 {/* Initial Loading */}
                 {isLoading && articles?.length === 0 ? (

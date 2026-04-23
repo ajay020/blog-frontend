@@ -30,7 +30,7 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className=" px-4 py-12">
 
             <div className="space-y-4">
                 {myArticles.map((article) => (
